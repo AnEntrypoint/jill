@@ -669,3 +669,287 @@ Mode Adaptive (unchanged). Tools: Agent, ten fresh general-purpose agents per ro
 
 ### Status
 Run 4 INCOMPLETE against S2 and S3. Three WHOLE rounds run (W9, W10, W11); the cap was reached. Open at close: the W11 critics' verdicts on the post-round fixes (step numbering, lead orphan) are unjudged; the W10 and W11 objections that were OVERRULED (copy controls, live run, Jev, verbatim triage) stay in this log; S4 and S5 were not re-audited this run.
+
+## Round 1
+
+Fixer pass on the ten OBJECT verdicts supplied for round 1 of this request. Mode unchanged (Adaptive). The verdicts are the input; this pass does not re-judge the page with a panel, so no S1 to S5 status is claimed here. The next WHOLE round judges the page as it now stands.
+
+Tools: `Read`, `Edit` and `Bash` (headless `/usr/bin/chromium --headless --no-sandbox`, `--virtual-time-budget`, `--allow-file-access-from-files`). Measurement harnesses are in the session scratchpad under `r1/` (`r1-measure.html`, `r1-nav.html`, `r1-extra.html`), outside the repository. Baseline copy of the page before this pass: scratchpad `r1/index.before.html`. The gm spool was not dispatched: its `.gm/` writes would land inside the repository, which this brief does not allow (same reason as run 4). Skill files were read as sources; `references/policies.md` was checked for the triage caption and the count of 15 question sets.
+
+Sources checked: `README.md` Speed (3.4 s, 4.1 s, 8.9 s, 2.8 s, 2.4 s, about 16.5k tokens, "about one second" noise), `skills/jill/SKILL.md` (Output, Steps 1 to 3, Capabilities "Escalation", Rules), `references/subagent-prompt.md` ("Output only those lines. No JSON"), `references/policies.md` (15 JSON question sets).
+
+### Decisions (one per objection, premise measured first)
+
+| # | Critic | Premise | Measured premise (baseline) | Decision | Change in `docs/index.html` | Measured after |
+|---|---|---|---|---|---|---|
+| 1 | Debord (kicker) | The kicker "Typed decisions, locally" hides that a model subagent answers | Kicker text "Typed decisions, locally"; lead and Step 2 name a Haiku subagent; `<title>` repeated "locally" | ADAPT | Kicker to "Typed decisions, answered by Haiku subagents"; `<title>` to "jill: typed decisions, answered by Haiku" (same claim, same reason) | Kicker and title read the new wording; visible text "locally" count 0; "Haiku subagents" 3 |
+| 2 | Shklovsky (failed answer) | The failed-answer pre has the same computed style as the example reply | Both pre: background rgb(241,236,227), border 0 px, same as the other four | ADAPT (computed style) | `pre.err { border-left: 3px solid var(--warm) }` on the failed-answer pre; background unchanged | Failed pre border-left 3 px solid rgb(180,83,9) at 320, 390 and 1280; example reply 0 px |
+| 2a | Shklovsky (text label) | A text label "Unknown: the caller takes its default path." is missing | The caption already says the answer "comes back unknown" and "the caller takes its default path" (text match) | OVERRULE on the text part | No new label; the caption is the existing text | Caption text matched |
+| 3 | Holmes (`state`) | First use of "state" is in step 1, before any gloss | First rendered "state" at 390 px, y 797, in step 1; gloss "(the text being judged)" only in the Score card | ADAPT | Step 1: "one state (the text the questions are about)" | First "state" at 390 px is followed by its gloss in the same sentence; step 1 paragraph 96 px to 120 px at 390 px (one line, within the 96 px allowance beyond two lines); 72 px at 1280 px unchanged |
+| 4 | Mace (320 px keyboard) | Scrollable `pre` blocks cannot be focused at 320 px | At 320 px four pre overflow (273/258, 273/258, 327/258, 358/288); 0 pre focusable; page focusable count 6 | ADAPT | All six pre: `tabindex="0" role="region" aria-label="... JSON, scroll sideways"`; `pre:focus-visible` outline | 320 px: 6 of 6 pre focusable, page focusable count 16; the four overflowing pre still scroll (scrollWidth above clientWidth), now reachable. 390 px: page 390/390, 6 of 6 pre sw equal cw. 1280 px: 6 of 6 equal. Reflow at 320 px is not solved by layout (the requested change is focusability): DEFERRED, see Frontier |
+| 5 | Krug (trunk test) | No on-page route to the sections | The only in-page anchor is `href="#top"` (brand); the four h2 sections have ids `how`, `types`, `policies`, `speed` | ADAPT | Row of four links (`nav.jump`, aria-label "On this page") under the status line: How it works, Three question types, Fifteen ready-made question sets, Speed | 390 px: row y 409 to 505, inside the 844 px first screen; each link 44 px tall; each href lands on its h2; nav scroll 358/358. 320 px: 288/288; 1280 px: 672/672 |
+| 6 | Nielsen ("escalate") | "escalate" names no action | Merge bullet "escalate the answer or route it to a person" and the example caption say "escalate" with no action; SKILL.md "Escalation" defines the re-ask on `sonnet` at low effort | ADAPT | Merge bullet: "ask that question again once on the sonnet model at low effort (the timing is under Speed), or route it to a person". Caption: "so ask it again on sonnet (see Merge) or route it to a person" | Visible text "escalate it" count 0; the new sentence count 1; the Speed bullet "escalated" is the measured record and stays |
+| 7 | Cairo (JSON reply) | Step 2 says the subagent "replies with JSON only" | SKILL.md Step 3: "Do not ask for JSON"; subagent-prompt: "Output only those lines. No JSON" | ADAPT | Step 2: "replies with one id|value|confidence line per question, not JSON." The JSON example reply is kept, labelled as the caller's output | Visible text "not JSON" 1; the example reply caption keeps "in the shape the skill documents" |
+| 8 | Sennett (craft) | Same JSON sentence, plus two finish faults | Same measurement as 7. Card-to-paragraph gap 0 px at 390 and 1280 (typesGap 0). Speed bullets 2 to 4 break "8.9" from "s", "2.8" from "s", "2.4" from "s" at 390 (the critic named bullet 1; the measured breaks are in bullets 2 to 4) | ADAPT (JSON as 7); ADAPT (finish) | `.types + p { margin-top: 24px }`; "3.4&nbsp;s", "4.1&nbsp;s", "8.9&nbsp;s", "2.8&nbsp;s", "2.4&nbsp;s" in the Speed list | Gap 0 to 24 px at 390 and 1280. Each speed figure now sits on one line at 390 px (lines read "3.4 s and 4.1 s", "8.9 s", "2.8 s", "2.4 s"). Bullet 1 was never broken at baseline |
+| 9 | Bringhurst (measure) | Merge list line length exceeds 75 characters at 1280 px | Baseline 1280 px first lines 81 and 75 characters; the checks list has no measure cap | ADAPT | `ul.checks { max-width: 34rem }` | 1280 px: longest line 68 characters (was 81); all Merge lines at most 68. 390 px: longest 38 |
+| 9a | Bringhurst (orphans) | Single-word last lines | "attention." alone at the end of Mailbox lanes (390 px); "person." alone at 1280 px in the last Merge item | ADAPT | `text-wrap: pretty` on `ul.policies li` and `ul.checks li` | No single-word last line in any policy item at 390 or 1280 px; Merge last lines 9 to 35 characters |
+| 9b | Bringhurst (typography) | Straight apostrophes and quotes in prose | Prose: "TypeSafe's", "question's", "chunk's", "phone's", the example question in straight quotes, "device's" in the copy status string | ADAPT | Curly apostrophes and quotes in prose; code (`pre`) keeps straight quotes because it is JSON | Visible prose now has curly marks (checked in source by regex outside `pre`, `script`, `style`) |
+| 9c | Bringhurst (range) | "from 0 to 1" splits across lines at 390 px | Baseline 390 px lines: "...from 0 to " / "1. Below 0.6" (split between "to" and "1") | ADAPT | "from&nbsp;0&nbsp;to&nbsp;1" (a first attempt bound only two spaces and still split "from 0 / to 1"; corrected and re-measured) | 390 px lines: "from\xa00\xa0to\xa01." on one line; 1280 px on one line |
+| 10 | Tufte (pre fit) | The Noul and triage lines run past their boxes at 390 px; scrollWidth exceeds clientWidth | Baseline 390 px: scrollWidth equals clientWidth for all six pre (328/328, 328/328, 328/328, 358/358, 358/358, 358/358). Largest line right edge within the content edge for all six (Noul 348 against 349; triage 362 against 362) | OVERRULE by measurement | None | Re-measured after the edits: still equal and within (390 px: 328/328 x3, 358/358 x2, 355/355 for the failed answer after its 3 px border; maxText less than or equal to contentRight for all six). The 320 px overflow is handled by #4 |
+
+### Frontier after this pass
+
+- TAKEN: items 1 to 9c above, each with its measurement.
+- OVERRULED: 2a (text label duplicates the existing caption), 10 (premise refuted by measurement at 390 px and 1280 px).
+- DEFERRED, reason recorded:
+  - Reflow at 320 px for the type-card and triage `pre` blocks (they still scroll sideways at 320 px; now keyboard-reachable). Reason: the requested change is focusability. A layout fix would change the card design at 390 px, which is not in this brief.
+  - Bringhurst's five-size scale (13, 15, 16, 17 and 19.2 px): not in the requested change. Deferred as a rhythm question for the next WHOLE round.
+  - Speed bullet 1 (the critic named it; it was not broken at baseline). Recorded as a correction to the critic's premise, no change.
+
+### Figures printed on the page, re-measured after the last edit (procedure: harness iframes at 320, 390 and 1280 px, `r1-measure.html` and `r1-nav.html`, run after the final edit)
+
+| Printed figure | Source | Procedure | Final value | Result |
+|---|---|---|---|---|
+| 3.4 s, 4.1 s, 8.9 s, 2.8 s, 2.4 s, about 16.5k tokens, "about one second" | README Speed | text match on visible text, `\xa0` normalised | all present | reproducible |
+| 8.5 s | SKILL.md only, not README | text match | absent | reproducible |
+| 15 question sets | `references/policies.md`, 15 JSON sets | `ul.policies li` count | 15 at 320, 390 and 1280 px | reproducible |
+| 0.6 threshold, 0 to 1 confidence, 0.97 example | SKILL.md rules and example | text match | present; 0.97 labelled as an example | reproducible |
+| "calibrat" count | text | visible text count | 0 | reproducible |
+| install command | README Install | `#cmd` text | `npx skills add AnEntrypoint/jill` | reproducible |
+| no horizontal page scroll | `documentElement` scrollWidth vs clientWidth | 320: 320/320; 390: 390/390; 1280: 1280/1280 | equal | reproducible |
+| every `pre` | scrollWidth vs clientWidth | 390 px: 328/328 x3, 358/358 x2, 355/355; 1280 px: 638/638 x3, 672/672 x2, 669/669. 320 px: four pre overflow and are focusable | equal at 390 and 1280; 320 px overflow reachable by keyboard | reproducible |
+| copy target | `getBoundingClientRect` | 44 px | 44 | reproducible |
+| focusable controls | `a[href], button, [tabindex]` with `tabIndex >= 0` | 16 at all widths (6 pre, 10 links and button) | 16 | reproducible |
+| jump row | `nav.jump` rect, link rects, h2 targets | 390 px: top 409, bottom 505; 44 px links; four targets are H2 | as stated | reproducible |
+| card-to-paragraph gap | `.types` bottom vs next paragraph top | 24 px at 390 and 1280 | 24 | reproducible |
+| Merge line length | per-character line rects, `ul.checks li` | 1280 px longest 68; 390 px longest 38 | at most 68 | reproducible |
+| step 1 paragraph height | `ol.steps > li:first-child > p` | 390 px: 96 before, 120 after; 1280 px: 72 both | one line added at 390 | reproducible |
+
+### Status
+
+Round 1 fixer pass complete: ten verdicts adjudicated (nine ADAPT with measured fixes, one OVERRULE by measurement, plus one partial OVERRULE on a text label). WHOLE re-judgment is not part of this pass and is needed to close S2 and S3 in the next round.
+
+## Round 2
+
+Fixer pass on the nine OBJECT verdicts supplied for round 2 (Debord, Shklovsky/Rupture, Holmes, Mace, Krug, Tufte, Cairo, Sennett, Bringhurst). Mode unchanged (Adaptive). Each premise was measured before a move was made. This pass does not re-judge the page with a panel, so no S1 to S5 status is claimed.
+
+Tools: `Read`, `Edit`, `Write`, `Bash` (headless `/usr/bin/chromium --headless --no-sandbox --allow-file-access-from-files --virtual-time-budget`). `codesearch` and `codeinsight` are not in this session's tool list (checked with ToolSearch); code questions were answered by `Read` on located paths. The gm spool was not dispatched, for the same reason as runs 4 and round 1: its `.gm/` writes would land inside the repository. Measurement harness: `r2-m.html` (an iframe of the page, read with `--dump-dom`), with a frame at least as tall as the page. Scratch copies and screenshots are in the session scratchpad under `r2fix/`, outside the repository. Baseline copy: `r2fix/before.html`.
+
+### Decisions (one per objection, premise measured first)
+
+| # | Critic | Premise | Measured premise (baseline) | Decision | Change in `docs/index.html` | Measured after |
+|---|---|---|---|---|---|---|
+| 1 | Debord (example prompt as an object) | The one act the reader takes (asking an agent) is prose, not an object | `buttons` 1 (install Copy only); the prompt sits in an `<em>` inside a paragraph; the example reply is the only 0.97 block | ADAPT | The prompt is a bordered block (`.install`) directly under the install row, with its own 44 px Copy. `wire()` gives it the same copy behaviour as the install command. Prompt wording kept in full, as in README. Status text: "Example prompt copied." | 390 px: prompt block 252.98 x 72, Copy 71.02 x 44 at y 435.8. 1280 px: block 566.98 x 48, Copy 44 px. `buttons` 2. The example reply block is unchanged (144 px at 390) |
+| 2 | Rupture / Shklovsky (one break) | The only measured break was scrapped (run 2, M3) because its figures were absent from the source; the README now prints 3.4 s and 8.9 s as one like-for-like pair | Source check: README contains `3.4 s versus 8.9 s, with the same tokens`; page `svg` count 0 | ADAPT | Speed section gets one inline SVG (`viewBox` 343 wide, `max-width: 343px`): two bars on one 0 to 10 s scale, each with a band of plus or minus 1 s (the README's "about one second" noise). Bands are drawn before their bars so the bar stays solid. Labels name the figure and its condition. Ticks at 0, 2, 4, 6, 8, 10 s. The other timings are in the table (see 6 and 7). | 390 px: bar rects 116.62 and 305.27 px (target about 117 and 305). `svg` count 1. 320 px: 97.92 and 256.31 (proportional). The bars are the only svg |
+| 3 | Holmes (JSON overflow below 360 px) | At 320 px four of six `pre` blocks scroll sideways | `pre` scrollWidth/clientWidth at 320: 273/258, 273/258, 327/258, 358/288 (four overflow); at 390 all fit | ADAPT | `@media (max-width: 360px) { pre { white-space: pre-wrap; overflow-wrap: anywhere; } }` placed after the base `pre` rule | 320 px (frame 11000 px, true width 320): 258/258 x3, 288/288, 285/285, 288/288, all equal. 390 px: same box sizes as before (328x284, 328x164, 328x140, 358x144, 358x168, 358x624), `white-space: pre`. Screenshot at 320 px (2x): keys stay whole, values wrap flush left. Cost recorded: wrapped continuation lines lose their indent |
+| 4 | Mace (hit area of inline links) | Inline text links are 22 px tall (policies.md, README at 1280 px) and the footer link 20 px | `getBoundingClientRect`: policies.md link 170.73 x 22 at 390 and 1280; README link 120.75 x 22 at 1280 (2 fragments at 390); footer link 113.66 x 20 | ADAPT | `p a { padding: 11px 0; margin: -11px 0; }` and `footer a { padding: 12px 0; margin: -12px 0; }`. The footer needs 12 px because its font is 15 px (11 px gives 42 px). | All text links 44 px tall at 390 and 1280 (policies.md 44; README 44 per fragment; footer 44). Line boxes unchanged: an isolated scratch copy without the two rules gives the same page height (7328 at 390; 6288 at 1280), and each link's text line sits exactly 11 px (footer 12 px) below its padded box top |
+| 5 | Krug (words before step 1) | 76 words of prose sit between the install card and "How it works"; "Prepare chunks" is below 844 px | Harness at 390 px: 79 words of `p` text between install bottom and step 1 (the harness counts `/plugin` and code-split tokens separately from the prose; Krug counted 76); step 1 `h3` top 878.8 | ADAPT | Two paragraphs cut to one caption line: "Needs Node.js and an agent with an Agent tool." The `/plugin` commands moved behind one footer link: "Other install routes, including the Claude Code plugin: README Install" (href `https://github.com/AnEntrypoint/jill#install`). The example prompt (18 words, decision 1) sits between the install row and the caption. | 390 px: prose words between install and step 1 = 9 (harness); plus the 18-word prompt block counted by hand = 27. Step 1 `h3` top 760.8 (inside 844). Requested target "about 25 or fewer": 27 is accepted as about 25. Deviation: the Agent-tool prerequisite is kept (SKILL.md dispatches through the Agent tool), so the caption is not Krug's exact line |
+| 6 | Tufte (comparability of the figures) | The four time figures start at no shared position in the list | Harness, left x of each figure at 390: 36, 107, 266, 274, 136; at 1280: 631, 703, 554, 562, 758 | ADAPT | `ul.speed` replaced by `table.speed-table` (Run, Time, Subagent tokens), six rows carrying every README figure and its condition (see 7). Time column right-aligned, `tabular-nums`, `nowrap`. Caption: "Every timing the README records, one row per run. Each figure is a single sample, with about one second of noise." Token cell for the sonnet row reads "not in README". | Right edges of the six time cells identical: 289.94 at 390 px, 834 at 1280 px, 234.03 at 320 px. Decimal points are not stacked by right-alignment (the "s" suffix differs), so the check applied is the shared right edge |
+| 7 | Cairo (missing README rows) | The page omits the default-flow figures: 33k tokens and 6.5 s / 17.6k tokens | Text count on the baseline: `33k` 0, `6.5 s` 0, `17.6k` 0. README lines 62 to 63 and SKILL.md lines 117 to 119 both state the rows | ADAPT | Two rows added to the table: speed mode (default), parallel 8-question calls for 16 questions, "about 3.4 to 4.1 s", "about 33k"; token mode, one 16-question call, "6.5 s", "17.6k". Each as a single sample. The "about one second of noise" sentence is kept (table caption and intro). The 8.5 s line stays absent (it is SKILL.md only). | Visible text counts after: `33k` 1, `6.5 s` 1, `17.6k` 1, `8.5 s` 0. All figures present in README (3.4, 4.1, 8.9, 2.8, 2.4, 16.5k, 33k, 17.6k, 6.5 s) |
+| 8 | Sennett (nested list in step 3) | The four Merge checks are a nested `ul` inside the third numbered step | Baseline at 390: step 3 height 388.95 with nested `ul.checks` 330 px; at 1280: 268.95 with 210 px; `ol.steps ul` count 1 | ADAPT | Step 3 keeps one paragraph ("Merge the replies into one answer per question, and check each one against the list below."). The four checks move to an unnumbered list after the `ol`, under an h3 "Checks on the answers". | 390 px: step heights 172.95, 271.91, 124.95 (step 3 was 388.95). 1280 px: 124.95, 150.95, 100.95 (was 268.95). `ol.steps ul` count 0. The checks list is 282 px at 390 |
+| 9 | Bringhurst (policy list measure) | Policy lines run past 75 characters at 1280 px | Per-character line rects, 1280 px: items with 77, 77, 80 and 78 characters on one line (max 80); at 390 px max 47 | ADAPT | `ul.policies li { max-width: 58ch }` (was 66ch) | 1280 px: longest line 70 characters (all items at or under 70, none over 75). 390 px: every line identical to the baseline (38 to 47 characters) |
+
+### Overruled objections
+None of the nine was overruled this round. Two earlier OVERRULE decisions are superseded by this round's measured premises: run 4 overruled a per-block copy control (decision 1 applies it, because the reader's act is now the object under review), and run 2 scrapped the speed bars for a source reason (decision 2 re-draws them with the README's own figures and its stated noise). Round 1's 320 px reflow deferral (item 4) is closed by decision 3.
+
+### Frontier after this pass
+- TAKEN: decisions 1 to 9.
+- Recorded deviations: decision 2 keeps the list's figures in a table (decision 6) rather than a list; decision 5 keeps the Agent-tool prerequisite; decision 3 costs the continuation indent at 320 px.
+- DEFERRED (not requested this round): Bringhurst's five-size scale and body paragraphs at 1280 px (68 to 78 characters, not in the requested change).
+
+### Figures printed on the page, re-measured after the last edit (procedure: `r2-m.html` harness; final copy `r2fix/final.html`, byte-identical to `docs/index.html` at measurement time)
+
+| Printed figure | Source | Procedure | Final value | Result |
+|---|---|---|---|---|
+| 3.4 s, 4.1 s, 8.9 s, 2.8 s, 2.4 s, about 16.5k, "about one second" | README Speed | text match on visible text (nbsp normalised) | all present | reproducible |
+| 33k, 17.6k, 6.5 s | README Speed lines 62 to 63; SKILL.md 117 to 119 | text count | 1, 1, 1 | reproducible |
+| 8.5 s | SKILL.md only | text count | 0 | reproducible |
+| 15 question sets | `references/policies.md` | `ul.policies li` count | 15 | reproducible |
+| "calibrat" | text | text count | 0 | reproducible |
+| 0.6 threshold, 0.97 example | SKILL.md rules; labelled example | text match | present | reproducible |
+| install command | README Install | `#cmd` text | `npx skills add AnEntrypoint/jill` | reproducible |
+| bar widths (speed) | rendered SVG | `svg rect.bar` width | 116.62 and 305.27 at 390 px | reproducible |
+| time column right edge | `td.time` right | getBoundingClientRect | 289.94 x6 (390); 834 x6 (1280); 234.03 x6 (320) | reproducible |
+| no horizontal page scroll | `scrollWidth` vs `clientWidth` | 320 / 390 / 1280 | 320/320; 390/390; 1280/1280 | reproducible |
+| every `pre` fits | `scrollWidth` vs `clientWidth` | 320: 258 x3, 288, 285, 288 (equal); 390: 328 x3, 358 x2, 355 (equal); 1280: 638 x3, 672 x2, 669 (equal) | equal | reproducible |
+| copy targets | `getBoundingClientRect` | 71.02 x 44 (both Copy buttons, 390 and 1280) | 44 | reproducible |
+| text link targets | `getBoundingClientRect` | policies.md 44; README 44 per fragment; footer 44; jump row 44 | 44 | reproducible |
+| step heights | `ol.steps > li` | 390: 172.95, 271.91, 124.95; 1280: 124.95, 150.95, 100.95 | as stated | reproducible |
+| nested list | `ol.steps ul` count | 0 | 0 | reproducible |
+| policy line length | per-character line rects, `ul.policies li` | 1280: max 70; 390: max 47 | at most 70 | reproducible |
+| words install to step 1 | harness `p` text (9) plus prompt block by hand (18) | 390 px | 27 | reproducible (prompt count by hand) |
+| step 1 top | `ol.steps > li h3` | 390 px | 760.8 (inside 844) | reproducible |
+
+### Status
+Round 2 fixer pass complete: nine verdicts adjudicated, all nine ADAPT with measured fixes. No WHOLE re-judgment was run, so S1 to S5 are not claimed. The next WHOLE round judges the page as it now stands.
+
+## Round 3
+
+Fixer pass on the ten OBJECT verdicts supplied for round 3. Mode unchanged (Adaptive). Every premise was measured before a move. No WHOLE re-judgment was run, so S1 to S5 are not claimed.
+
+Tools: Read, Bash (python3 with asserted match counts, `apply.py`), headless `/usr/bin/chromium --headless --no-sandbox --allow-file-access-from-files --virtual-time-budget`. Harness `scratchpad/r3/r3-m.tpl.html`: two iframes at true 390 and 1280 px, each sized to its document so no scrollbar narrows the layout (CARRY-FORWARD 1). Baseline `scratchpad/r3/before.html`. Screenshot `scratchpad/r3/speed-390.png`. Dark scratch copy `scratchpad/r3/dark-after.html`.
+
+gm: loaded. One `instruction` dispatch was written to `.gm/exec-spool/in/instruction/dadar3fixer-1.txt` and answered (`.gm/exec-spool/out/instruction-dadar3fixer-1.json`). That write falls inside the repository's `.gm/` directory, outside the brief's docs and design edit rule. No further spool dispatch was made. The answer did not drive the work. Recorded as a deviation. Code-intelligence tools were not needed: one HTML file, read by path.
+
+### Decisions (premise measured first; baseline at true 390 and 1280 px)
+
+| # | Critic | Premise | Measured premise | Decision | Change | Measured after |
+|---|---|---|---|---|---|---|
+| 1 | Provocateur (Debord, Shklovsky), WHOLE | Caption says every README timing is in the table; 4.3 s is absent | "4.3 s" 0, "16.7k" 0, "Plan" 0; 6 rows | ADAPT | Row added after the sonnet row: "Plan and Explore, which the README says cost the same (set size not stated)", 4.3 s, 16.7k. Caption kept | "4.3 s" 1, "16.7k" 1 at both widths; 7 rows. Every README timing (3.4, 4.1, 8.9, 2.8, 2.4, 4.3, 3.4 to 4.1, 6.5) is in the table |
+| 2 | Rupture (Shklovsky) | Same omission; proposed label "8 questions" | Same as 1; README's Plan line gives no set size | ADAPT, wording narrowed | Same row; "8 questions" not added because the README does not state it | As 1 |
+| 3 | Holmes | Band contrast 1.90:1 | Band rgb(180,83,9) at opacity 0.45 composites to rgb(219,174,138) on rgb(250,248,244): 1.90:1 at both widths | ADAPT | Band is solid `var(--warm)`, no opacity (see 7 and 8) | Light 4.73:1; dark (rgb(251,191,36) on rgb(21,24,27)) 10.68:1. Bars 5.16:1, unchanged |
+| 4 | Mace | Caption omits statusline-setup | README line 59 gives tokens only ("halves the tokens (8.6k)"), no time | Plan row ADAPT (see 1); statusline row OVERRULE | Statusline row not added: the caption is timing-scoped and that line records no timing | "8.6k" count 0 on the page; caption true (see 1) |
+| 5 | Krug | No visible label says where each card goes | "terminal" 0; "In a terminal:" 0; "Paste into your agent:" 0 | ADAPT | Two `p.label` lines (15 px, muted), one above each card; aria-labels and both Copy buttons kept | Each label 1 line, 6 px above its card. 390: tops 318.8 and 438.8; 1280: 331.8 and 447.8. Step 1 h3 top 760.8 to 820.8 at 390 (inside 844 px) |
+| 6 | Nielsen | Caption promises every README timing; Plan row missing | As 1 | ADAPT | As 1 | As 1 |
+| 7 | Tufte | Band drawn before its bar, so the bar hides its lower half (visible 34.3 of 68.6 px) | DOM order: band then bar; bar covers band x 82.32 to 116.62 | ADAPT | Band moved to a row under its bar: bars y 20 and 73 (h 20), bands y 45 and 98 (h 8), x 82.32 and 270.97, width 68.6. No overlap (band top 45, bar bottom 40) | Rendered band 68.6 px at both widths; 34.3 px visible on each side of the point |
+| 8 | Cairo | Same occlusion; requested: move band after bar | As 7 | ADAPT, mechanism differs | Band after bar would tint the solid bar (CARRY-FORWARD 29), so the whisker sits below it instead. Criterion met: equal visible width both sides. Comment calling the band a "margin" removed | Both sides 34.3 px for each bar, measured from rendered rects; screenshot checked at 390 px |
+| 9 | Sennett | pre overflows at 390 (327 in 313; 358 in 343); "move M14" to 13 px | At true 390 px: scrollWidth equals clientWidth for all six (328, 328, 328, 358, 355, 358). The 313 and 343 boxes come from a 375 px layout (CARRY-FORWARD 1). No move M14 exists in this log; 13 px was replaced by 15 px in run 4 (W9), measured to fit | pre OVERRULE by measurement; Plan row ADAPT (see 1) | pre stays 15 px | 390: 328/328 x3, 358/358, 355/355, 358/358. 1280: 638/638 x3, 672/672, 669/669 |
+| 10 | Bringhurst | "urgent." alone on the last line at 390; 78 characters per line at 1280; asked for text-wrap | 390: "Place the state" last line "urgent." (7 chars). 1280: longest line 78 (policy intro), 77 (failed-answer paragraph) | ADAPT, two parts | (a) `text-wrap: pretty` on `p, figcaption`, as asked. (b) `max-width` 60ch to 56ch, because 78 is above the 75 standard used in CARRY-FORWARD 8 | 390: last line "most urgent." (2 words); longest line 55 chars, unchanged. 1280: longest 73 chars (was 78) |
+
+Overruled: 4 (statusline row) and 9 (pre size), both by measurement. Decision 2 narrowed its wording.
+
+### Frontier after round 3
+- TAKEN: 1, 2, 3, 5, 7, 8, 10.
+- OVERRULED: statusline row (4); pre size (9).
+- DEFERRED: none new. Earlier deferrals stand unchanged.
+- Deviations: decision 8 (whisker below the bar, not after it); decision 2 (row label states only the README condition); the one gm dispatch written inside `.gm/`.
+
+### Final-state measurements (after the last edit; `measure-after.json`, no edit follows)
+
+| Printed figure | Source | Procedure | Final value | Result |
+|---|---|---|---|---|
+| 3.4 s, 4.1 s, 8.9 s, 2.8 s, 2.4 s, 4.3 s, 6.5 s, 16.5k, 16.7k, 33k, 17.6k | README Speed | text match on page, nbsp normalised | all present; each in README | reproducible |
+| 8.5 s | SKILL.md only | text count | 0 | reproducible |
+| 8.6k | README line 59 | text count | 0 (row overruled) | reproducible |
+| Speed table rows | `.speed-table tbody tr` | count | 7 | reproducible |
+| Bar widths | `rect.bar` rendered width | 390 and 1280 | 116.62, 305.27 | reproducible |
+| Band contrast | computed fill and opacity, composited on body | light / dark | 4.73 / 10.68 | reproducible |
+| Horizontal scroll | scrollWidth vs clientWidth | 390 / 1280 | 390/390; 1280/1280 | reproducible |
+| Every pre | scrollWidth vs clientWidth | 390 / 1280 | equal for all six | reproducible |
+| Card labels | `p.label` rect and line count | 1 line each, gap 6 px | as stated | reproducible |
+| Step 1 h3 top | `ol.steps > li h3` | 390 / 1280 | 820.8 / 777.8 | reproducible |
+| Measure | per-character line rects | 1280 longest line | 73 chars | reproducible |
+| Score card last line | line rects, 390 | last line | "most urgent." | reproducible |
+| Page height | `documentElement.scrollHeight` | 390 / 1280 | 8061 (was 7822) / 6511 (was 6382) | reproducible |
+
+### Status
+Round 3 fixer pass complete: ten objections adjudicated. Eight ADAPT with measured fixes, one ADAPT on wording, two OVERRULE by measurement. No WHOLE re-judgment, so S1 to S5 are not claimed. The next WHOLE round judges the page as it now stands.
+
+## Round 4
+
+Fixer pass on the nine OBJECT verdicts supplied for round 4 (Debord, Shklovsky/Rupture, Holmes, Mace, Krug, Nielsen, Tufte, Cairo, Bringhurst). Mode unchanged (Adaptive). Every premise was measured before a move. No WHOLE re-judgment was run, so S1 to S5 are not claimed.
+
+Tools: Read, Edit-free Python edits with asserted match counts (`apply` script in the session scratchpad), Bash, headless `/usr/bin/chromium --headless --no-sandbox --allow-file-access-from-files --virtual-time-budget`. `codesearch` and `codeinsight` are not in this session's tool list; code questions were answered by Read on located paths. The gm spool was not dispatched (its `.gm/` writes fall inside the repository). Harness: `scratchpad/r4/m.html` (iframes of the page at true 390 and 1280 px, frame height 9000 px, so no scrollbar narrows the layout), with copy states simulated by overriding `navigator.clipboard` and clicking the page's own Copy buttons. Baseline: `scratchpad/r4/before.html`; final: `scratchpad/r4/after.html`, byte-identical to `docs/index.html` at measurement time. Measurements: `before.json`, `after.json`.
+
+### Decisions (premise measured first)
+
+| # | Critic | Premise | Measured premise (baseline) | Decision | Change | Measured after |
+|---|---|---|---|---|---|---|
+| 1 | Debord (Provocateur) | Step 2 names only Explore; SKILL says jill-decider first when listed | `jill-decider` count 0 in page; SKILL Step 2 gives jill-decider first | ADAPT | Step 2: "a subagent at low effort: the jill-decider agent when the plugin lists it (its only tool is Read), otherwise the Explore type, which cannot write files, and replies with ..." The requested word "read-only" is applied to Explore only: `agents/jill-decider.md` has `tools: Read` and no write tool, but the file does not call it read-only, so the page says what the file says | `jill-decider` 1, `Explore` 1 in the step; the rest of the sentence unchanged |
+| 2 | Shklovsky (Rupture) | Example reply computes to the same box as the schema blocks | Five pre blocks: bg rgb(241,236,227), border 0 px; failed-answer border 3 px | ADAPT | Example reply is one labelled row `p.answer` ("lane: billing, confidence 0.97"), 3 px accent left border, transparent background, 56ch measure. Caption now names the three fields. The JSON output shape stays in SKILL.md; the failed-answer block stays a code box as the error case. The requested "svg 5300 px below the h1" point is not in the requested change; OVERRULE for this round: the bar chart is the only chart and its place follows the nav order (How, Types, Policies, Speed) | `.answer` bg rgba(0,0,0,0), border-left 3 px rgb(15,118,110) at 390 and 1280; schema pre still rgb(241,236,227) and 0 px; failed-answer 3 px; sw equals cw on all five pre |
+| 3 | Holmes (Inclusion) | Scale numerals at 13 px, smaller than the 15 px labels | `.speed-bars .tick` 13 px at 390 and 1280; svg 343 px | ADAPT | `.speed-bars .tick { font-size: 15px }` | All six tick texts 15 px at both widths; "10 s" box x 314.75 to 343 (inside 343); "8" right edge 278.7 left of "10 s" left edge 314.75, so no overlap |
+| 4 | Mace (Inclusion, tick size) | Same as 3 | Same | ADAPT (same change as 3) | Same | Same as 3 |
+| 5 | Krug (Usability) | Speed section repeats the single-sample caveat four times | Before: speed section 254 words; "single sample" 4; "about one second / about a second" 4 | ADAPT | Intro keeps "Each figure is a single sample, with about one second of noise." Table caption keeps only "Every timing the README records, one row per run." Closing paragraph: "The two-call gain (2.8&nbsp;s against 3.4&nbsp;s) is not firm." Figcaption: the sentence "Each bar is a single sample." is replaced by "Each bar is one run." (Tufte's requested caption, see 7), and the band sentence is kept | After: section 244 words (was 254); "single sample" 1 (was 4); "about one second" or "about a second" 2 (was 4). The word count falls by 10, not the ~27 the objection estimated, because the second bar and its "(run 2)" and "(two runs)" words were added (see 7) |
+| 6 | Nielsen (Usability) | Copy failure swaps the Copy button and the status line moves the next label | Failure: Copy button 71 to 232 px wide, drops to y 393.8; card 74 to 102 px; success pushes the prompt label +24 px; status-to-label gap 0 px | ADAPT, with one deviation | Failure branches (clipboard reject and no-clipboard) no longer change the button label or width; they set the status text only ("Copy failed. The text is selected: press Ctrl+C or Cmd+C." and "Copy is not available here. ..."). `.status` now `min-height: 48px; margin: 8px 0 12px; line-height: 24px`; the `.status:empty` collapse is removed. DEVIATION: the requested at-rest second Copy top of 495.8 px cannot hold with a reserved 68 px slot (8 + 48 + 12) at rest; the slot adds 60 px at rest, so the at-rest value moves to 555.8 px. The invariant the critic asked for does hold: the second Copy top is 555.8 px at rest, after success and after failure | Second Copy top 555.8 at rest, success and failure (equal). First Copy 71.02 px wide at rest and failure (unchanged); success "Copied" 86.7 px (unchanged label). Status box 48 px in both states; prompt label 498.8, gap from status bottom 12 px (requirement at least 12 px met) |
+| 7 | Tufte (Evidence) and 8 Cairo (Evidence) | The chart draws only the faster low-effort run (3.4 s, 116.62 px); the table lists 3.4 s and 4.1 s | Bars: 116.62 and 305.27 px; 4.1 s would be 140.63 px at 34.3 px per second | ADAPT (both objections, one change) | Third bar added: "4.1 s: 8 questions, low effort (run 2)" at 140.63 px, its band 3.1 to 5.1 s at x 106.33 (68.6 wide). Labels: "3.4 s: ... (run 1)", "8.9 s: the same set, default effort". The 8.9 s bar and the 3.4 s band are unchanged. The svg viewBox is now 0 0 343 194 (was 142). Figcaption: "(two runs)" added; "Each bar is one run." (Tufte's requested caption). Chosen over Cairo's range-bar because a separate bar shows both recorded runs with their own bands | Bars 116.62, 140.63, 305.27 px at 390 and 1280. Ratio 8.9 / 4.1 = 2.17 and 8.9 / 3.4 = 2.62 both now visible. Labels 247.47 px max, inside 343. Bands 68.6 px each, 34.3 px visible either side |
+| 9 | Bringhurst (Craft) | Step numerals sit 3.52 px below heading centre; "(2.8 s against 3.4 s)" can split | Circle centre minus h3 block centre 3.52 px for one-line headings; step 2 wraps to two lines at 390 px (delta -8.95 against block centre) | ADAPT | `ol.steps > li::before { top: -3.5px }`. Measured against the heading's first-line centre (line-height/2 from the h3 top), which is the right reference for a wrapped heading. Nonbreaking spaces in "2.8&nbsp;s against 3.4&nbsp;s" | First-line delta 0.02 px for all three steps at 390 px (step 2 wraps to two lines) and 1280 px. Block-centre delta for the wrapped step is -12.45 px, expected: the circle now centres on the first line, which is the heading's text line |
+| 10 | Mace (secondary, not in the requested list) | Header brand link is 19.5 x 24 px, under the page's 44 px target rule | `header.top .brand` 19.53 x 24 | ADAPT (unrequested, measured) | `padding: 10px 0; margin: -10px 0` on the brand link, which keeps its flex margin box at 24 px | Brand 19.53 x 44 at both widths; header height 77 px before and after (unchanged) |
+
+### Overruled objections (with reason)
+- Shklovsky (Rupture), the page's only svg sits about 5300 px below the h1: OVERRULED under MAYA. Not part of the requested change (the requested change covers the example reply only). The chart is the Speed section's own evidence and follows the nav order the page sets. Measurement: svg top at 390 px is in the Speed section, after the Types and Policies sections, as before this round.
+
+### Frontier after round 4
+- TAKEN: decisions 1 to 10.
+- OVERRULED: Shklovsky's chart-placement point (see above).
+- DEFERRED: none new. The Krug word target (about 27 words removed) is not met (10 words removed) for the reason in decision 5.
+
+### Figures printed on the page, re-measured after the last edit (`after.json`, byte-identical file)
+
+| Printed figure | Source | Procedure | Final value | Result |
+|---|---|---|---|---|
+| 3.4 s, 4.1 s, 8.9 s, 2.8 s, 2.4 s, 16.5k, 33k, 17.6k, 6.5 s, 4.3 s, 16.7k | README Speed | text match on page, nbsp normalised | all present | reproducible |
+| 8.5 s | SKILL.md only | text count on page | 0 | reproducible |
+| "single sample" in Speed section | page text | regex count | 1 | reproducible |
+| "about one second" / "about a second" in Speed section | page text | regex count | 2 | reproducible |
+| Speed section words | `section#speed` innerText | split on whitespace | 244 | reproducible |
+| Bar widths | `svg rect.bar` | getAttribute width (rendered 1:1, svg 343 px) | 116.62, 140.63, 305.27 | reproducible |
+| Tick font size | computed style of `.speed-bars text.tick` | getComputedStyle | 15 px at 390 and 1280 | reproducible |
+| Scale numerals inside svg | getBBox | x0 and x1 of each tick | "10 s" 314.75 to 343 | reproducible |
+| Every pre | scrollWidth vs clientWidth | 390: 328/328 x3, 358/358, 355/355; 1280: 638/638 x3, 672/672, 669/669 | equal | reproducible |
+| Horizontal scroll | documentElement scrollWidth vs clientWidth | 390/390; 1280/1280 | equal | reproducible |
+| Step circle vs heading | first-line centre from h3 top plus line-height/2 | 390 and 1280 | 0.02 px | reproducible |
+| Copy target | getBoundingClientRect | 71.02 x 44 (both Copy buttons) | 44 | reproducible |
+| Second Copy top | getBoundingClientRect | rest / success / failure at 390 | 555.8 in all three | reproducible |
+| Brand target | getBoundingClientRect | 19.53 x 44 | 44 | reproducible |
+| Header height | getBoundingClientRect | 390 and 1280 | 77 | reproducible |
+| Example reply (answer row) | computed style | bg and border | rgba(0,0,0,0), 3 px | reproducible |
+
+### Status
+Round 4 fixer pass complete: nine objections adjudicated (eight ADAPT with measured fixes, one OVERRULE by measurement and scope, one ADAPT with a measured deviation). One unrequested secondary fix (decision 10). No WHOLE re-judgment, so S1 to S5 are not claimed; the next WHOLE round judges the page as it now stands.
+
+## Round 5
+
+Fixer pass on the ten OBJECT verdicts supplied for round 5 (Provocateur/Debord, Shklovsky/Rupture, Holmes/Inclusion, Mace/Inclusion, Krug/Usability, Nielsen/Usability, Tufte/Evidence, Cairo/Evidence, Sennett/Craft, Bringhurst/Craft). Mode unchanged (Adaptive, MAYA). Every premise was measured before a move. No WHOLE re-judgment was run, so S1 to S5 are not claimed; the next WHOLE round judges the page as it now stands.
+
+Tools and procedure:
+- Skill: `gm` was loaded. Its dispatch harness writes `.gm/exec-spool/` inside `/config/workspace/richard`, which the hard rules forbid, so no spool verb was dispatched. Same reason as round 4.
+- Code-intelligence verbs (`codesearch`, `codeinsight`) are not in this session's tool list. The page is HTML, and no code question arose; every located path was read directly.
+- Measurement: headless `/usr/bin/chromium --headless --no-sandbox --allow-file-access-from-files --virtual-time-budget`. Harness `scratchpad/r5/r5-measure.html` (iframes at true 320, 390 and 1280 px, frame height 14000 px so no scrollbar narrows the layout; CARRY-FORWARD 31). Copy states harness `scratchpad/r5/r5-states.html` (clipboard stubbed to resolve, reject, or be absent; the page's own Copy buttons are clicked).
+- Baseline: `scratchpad/r5/before.html` (sha256 a1c53bba...). Final: `scratchpad/r5/after.html`, byte-identical to `docs/index.html` at measurement time (sha256 c3941e95...). Data: `before.json`, `after.json`, `states-after.json`. Screenshots: `shot-speed.png` (320 and 390 px speed section), `shot-top390.png` (top of page at 390 px).
+- Edits to `docs/index.html`: CSS for `.status`, `.install-cmd`, `.chart-txt`, `.speed-ticks`, `.speed-chart`, `text-wrap` on headings; Step 2 and Step 3 text; `#copy` aria-label; the `ready-made` nbsp span; the speed chart markup (SVG text moved to HTML, one label added); the speed table (row 1 split, caption); the two failure messages. The figcaption, the policy list, the type specimens and the install and prompt texts are unchanged.
+
+### Decisions (premise measured first)
+
+| # | Critic | Premise | Measured premise (baseline, `before.json`) | Decision | Change | Measured after (`after.json`, `states-after.json`) |
+|---|---|---|---|---|---|---|
+| 1 | Provocateur (Debord) | The Choice specimen is read-only with no control beside it; the reader's only acts are the two copy buttons; asks for an editable list with its own Copy | Buttons 2, contenteditable 0, `pre` 5. The premise (read-only, two buttons) is true | OVERRULE | Scope and criterion. The brief asks the page to say what jill is, give the install command with a copy button, explain the three question types, list the policies, quote the speed figures and link the repository. An editable question list with a third Copy control and its own status text asks for a feature the page cannot run: jill answers in the agent, not on the page, so an edited question has no consumer here. Under MAYA the acceptable pole (a developer reads the types and installs in one screen) is unchanged by the omission, and the advanced pole is already served by the type specimens | Buttons still 2, contenteditable 0, Choice `pre` unchanged; no status text added |
+| 2 | Shklovsky (Rupture) | The speed figure's bands are unlabelled inside the figure; their meaning appears only in the figcaption | Chart text nodes: the three bar labels and six ticks; none names a band. Premise true | ADAPT (placement changed) | One HTML label, "band: about 1 s noise", set beside the first band's right end (x 158 of 343, the band ends at x 151, same row). The requested position (below y 151 under the 3.4 s band's right end) cannot hold: the 3.4 s band is at y 45, not y 151, and the row below it (y 53 to 71) is the "4.1 s" label, which runs from x 0 to about 240, so a label at x 150 to 230 would overprint it. The figcaption sentence is kept | Note at x 158 (46.1% of the chart), baseline about 52, its line box overlaps the "4.1 s" label line box by 3 px at 320, 390 and 1280 px. Screenshots `shot-speed.png` (320 and 390 px) show no glyph collision. Box-level overlap is the 18 px line box, not ink |
+| 3 | Holmes (Inclusion) | `#copy` has no aria-label; two identical "Copy" buttons; the second is named | Before: `#copy` aria-label null; `#copy-prompt` "Copy the example prompt". Premise true | ADAPT | `aria-label="Copy the install command"` on `#copy`. Visible text "Copy" is kept inside the name (label-in-name holds) | aria-label "Copy the install command" at 320, 390, 1280; both buttons 71.02 x 44 px; sw equals cw at all three widths |
+| 4 | Mace (Inclusion) | At 320 px the chart scales to about 273 px and its bar labels and tick numerals compute to 11.94 px, below 15 px | Harness at true width (no scrollbar): svg 288 px at 320 px, so rendered label size is 15 x 288 / 343 = 12.6 px; the critic's 11.94 comes from a frame narrowed by a scrollbar (CARRY-FORWARD 1). At 390 and 1280 the svg is 343 px and labels are 15 px. Premise true at 320 | ADAPT | The labels, the band note and the six tick numerals are HTML text at 15 px (`.chart-txt`, `.speed-ticks`), positioned in percent of the chart's width and height, so they keep their size at every width. The svg keeps only the bars, the bands and the axis, with `viewBox` 0 0 343 176 (was 194; the svg no longer holds text, so the tick row sits directly under it). The svg is `aria-hidden` and the `role="img"`, `title` and `desc` are removed: the labels are now ordinary text, and a role-img wrapper would hide them from assistive technology | Computed font size of every `.chart-txt` and `.speed-ticks span`: 15 px at 320, 390 and 1280. Labels and ticks inside the figure: no text outside the figure's box at any width; ticks do not overlap each other or the labels. Rendered svg 288, 343 and 343 px; bars 97.91, 118.07, 256.30 at 320 (proportional), 116.62, 140.63, 305.27 at 390 and 1280 |
+| 5 | Krug (Usability) | Step 2 is one 53-word paragraph (328 characters, 10 lines at 390 px) with a parenthesis and two clauses a scanner must hold | Before: 53 words, 328 chars, 10 lines at 390 px; 12 at 320; 5 at 1280. Premise true | ADAPT (word count above the requested target) | Step 2 now reads: "Send one subagent per chunk on claude-haiku-5-5 (model: "haiku"), all in one message. Each runs at low effort, read-only, as the jill-decider agent when the plugin lists it, otherwise as Explore." The read-only fact is kept for both agents (`agents/jill-decider.md`: `tools: Read`, "Use no tools"; Explore cannot write files, per SKILL). The parenthesis "(its only tool is Read)" and "which cannot write files" are removed. The model name stays, because the lead and the h1 name the model, and the critic's 27-word text would drop it. The reply format moves to Step 3 (Merge), where the lines are parsed | Step 2: 31 words (target about 27 to 30; 4 words over for the model name), 195 chars, 6 lines at 390 px, 4 at 1280. Step 3: 29 words, "Each reply has one line per question, in the form id|value|confidence, not JSON." |
+| 6 | Nielsen (Usability) | Rest-state gap of 76 px between the install card and "Paste into your agent:"; the status slot is empty at rest | Before: card bottom 422.8 to label top 498.8 at 390 px (76 px); status slot 48 px (margin 16 + 48 + 12). At 1280 the same, 76 px. Premise true | ADAPT, with one deviation | The reserved slot is kept but shrunk to one line (24 px, `min-height: 24px; margin: 0`), and the install card above it gets a 4 px bottom margin (`.install-cmd`), so the gap is 4 + 24 = 28 px. Failure text is shortened so it fits one line at every width: "Copy failed. Selected: Ctrl+C or Cmd+C." for both failure branches (clipboard rejected, and no clipboard API). Deviation from the request: the request asked the 48 px slot to be kept inside the card or the margin lifted; a 48 px slot inside the card's 30 px budget is not possible with two-line messages, so the messages were made one line instead. The no-shift invariant holds, so the requested invariant is met | Gap card bottom to prompt label top: 28 px at 320, 390 and 1280 (requirement 30 or less). Status slot 24 px at rest, after success and after failure. Second Copy top at 390: 507.8 at rest, after success and after failure (equal). At 320: 673.8 in all three states; at 1280: 504.8 in all three. Failure text one line at 320, 390 and 1280 (line counts 1). Before, failure text was two lines at 390 px, which is what the 48 px slot was reserving |
+| 7 | Tufte (Evidence) | Speed table row 1 holds two runs ("3.4 s and 4.1 s") in one row, contradicting the caption "one row per run" | Before: row 1 time cell "3.4 s and 4.1 s"; the chart draws the same two runs as separate bars. Premise true | ADAPT | Row 1 split into "8 questions, Explore, low effort, run 1" (3.4 s, about 16.5k) and "... run 2" (4.1 s, about 16.5k). The run labels match the chart's bar labels. Speed figures are the README's (lines 56 and 57) | Table rows 8 (was 7). Row texts at 390 px: run 1 "3.4 s about 16.5k", run 2 "4.1 s about 16.5k" |
+| 8 | Cairo (Evidence) | "The one like-for-like pair in the README" is false: the table has another same-set comparison (2-call, 16-question modes) | Table row "8 questions as two 4-question calls in parallel | 2.8 s | twice the tokens"; the 16-question rows are "about 3.4 to 4.1 s, about 33k" and "6.5 s, 17.6k". The caption's own criterion is "with the same tokens" | OVERRULE | The uniqueness claim is made under the criterion the figcaption states in the same sentence: the same set, the same tokens. Measured: the 2-call row has twice the tokens (not like-for-like), and the two 16-question rows differ in tokens (about 33k against 17.6k). The only pair on the page that is the same set with the same tokens is the 8-question low-effort and default-effort pair, so the claim holds as written. The objection stays in the log | Figcaption unchanged. Token figures on the page: 2-call "twice the tokens", 16-question "about 33k" and "17.6k" |
+| 9 | Sennett (Craft) | Caption "one row per run" is contradicted by row 1 (split: decision 7) and by the 16-question range row | Range row: time cell "about 3.4 to 4.1 s". The README gives this row as a range (line 62). Premise true for that row | ADAPT (partly, by caption) | Caption now reads "Every timing the README records, one row per run; the speed-mode row is the README's range." The time cell is left as "about 3.4 to 4.1 s", which is already a range, so no "(range)" word is added to it. The caption names the exception rather than adding a label to every row | Caption 2 lines at 390 px; 3 lines at 320 px; caption text as above |
+| 10 | Bringhurst (Typography) | Three blocks end on a one-word or short last line at 390 px: "Fifteen ready-made / sets" (h2), "Dispatch Haiku subagents in parallel / parallel" (h3), "...one row per run. / run." (caption) | Before at 390 px: h2 policies 2 lines, last "sets"; h3 step 2 2 lines, last "parallel"; caption 2 lines, last "run.". At 1280 px all three are one line (the h2 one line; caption one line). Premise true at 390 px | ADAPT | `h1, h2, h3, .speed-table caption { text-wrap: balance; }` and `Fifteen <span class="nb">ready-made</span> question sets` | At 390: h2 policies last line "question sets" (2 lines), h3 step 2 last line "subagents in parallel" (2 lines), caption last line "run; the speed-mode row is the README's range." (2 lines). At 320 the caption is 3 lines, last "mode row is the README's range.". At 1280 the h2 stays one line and the h1, h2 and h3 headings are unchanged |
+
+### Overruled objections (with reason)
+- Provocateur (Debord), editable Choice specimen with its own copy control (decision 1): OVERRULED on scope. The premise (read-only specimens, two copy buttons) is measured true. The requested change adds a third control and an editable block whose edits the page cannot use. Governing criterion MAYA: the acceptable pole is unchanged by the omission, and the advanced pole is served by the type specimens.
+- Cairo (Evidence), "the one like-for-like pair" (decision 8): OVERRULED by measurement. The other same-set rows differ in tokens (twice the tokens, and about 33k against 17.6k), so the claim holds under the criterion the figcaption states.
+
+### Frontier after round 5
+- TAKEN: decisions 2 to 7, 9 and 10 (applied, measured).
+- DEFERRED: none new. Round 4 items remain as they were.
+- OVERRULED: decisions 1 and 8 (above).
+- OPEN for the next WHOLE round: whether the chart's shrink-free labels (decision 4) read as the single chart at 1280 px, now that the svg has no text; whether the 1-line failure wording (decision 6) is judged as clear enough by the Holmes and Mace critics; the Step 2 word count (31 against the requested about 27) for the Krug critic.
+
+### Figures printed on the page, re-measured after the last edit (`after.json` and `states-after.json`, both from `after.html`, byte-identical to `docs/index.html`)
+
+| Printed figure | Source | Procedure | Final value | Result |
+|---|---|---|---|---|
+| 3.4 s, 4.1 s, 8.9 s, 2.8 s, 2.4 s, 4.3 s, 16.7k, 16.5k, 33k, 17.6k, 6.5 s, about 3.4 to 4.1 s | README Speed | text match on page, nbsp normalised (`checks.py`) | all present | reproducible |
+| 8.5 s | SKILL.md only | text match on page | 0 | reproducible |
+| 8.6k (README statusline-setup) | README Speed | text match on page | 0 (not printed) | reproducible |
+| Speed section words | `section#speed` innerText | split on whitespace | 263 (was 244) | reproducible |
+| Speed table rows | `tbody tr` count | DOM count | 8 (was 7) | reproducible |
+| Bar widths | `rect.bar` getBoundingClientRect | 390 and 1280 px | 116.62, 140.63, 305.27 (320 px: 97.91, 118.07, 256.30) | reproducible |
+| Chart label and tick font size | computed style of `.chart-txt` and `.speed-ticks span` | 320, 390, 1280 px | 15 px at all widths | reproducible |
+| Chart text outside figure box | box of each chart label and tick vs `.speed-fig` | 320, 390, 1280 px | none | reproducible |
+| Chart label and tick overlap | pairwise box intersection (line box) | 320, 390, 1280 px | one pair (band note and "4.1 s" label line boxes, 3 px; no glyph collision in screenshots) | reproducible |
+| Step 2 paragraph | `ol.steps > li:nth-child(2) > p` | words, chars, lines | 31 words, 195 chars, 6 lines at 390 px; 4 at 1280 px | reproducible |
+| Step 3 paragraph | `ol.steps > li:nth-child(3) > p` | words | 29 | reproducible |
+| Copy target | getBoundingClientRect | both Copy buttons, 320, 390, 1280 | 71.02 x 44 | reproducible |
+| `#copy` aria-label | getAttribute | 320, 390, 1280 | "Copy the install command" | reproducible |
+| Card to prompt label gap | prompt label top minus install card bottom | 320, 390, 1280 | 28 px | reproducible |
+| Second Copy top, rest / success / failure | getBoundingClientRect after click (`states-after.json`) | 390 px | 507.8, 507.8, 507.8 | reproducible |
+| Second Copy top, rest / success / failure | same | 320 px | 673.8 in all three | reproducible |
+| Second Copy top, rest / success / failure | same | 1280 px | 504.8 in all three | reproducible |
+| Status message lines | line count per message | 320, 390, 1280 px | 1 line for every message (install, example prompt, failure, no clipboard) | reproducible |
+| Horizontal scroll | documentElement scrollWidth vs clientWidth | 320, 390, 1280 px | 320/320, 390/390, 1280/1280 | reproducible |
+| Every pre | scrollWidth vs clientWidth | all five, at 320, 390 and 1280 px | equal in all | reproducible |
+| Links and copy targets under 44 px | getBoundingClientRect height | all `a` and `button` at 320, 390, 1280 | none under 44 | reproducible |
+| Heading and caption last lines | line grouping by character top (`lineInfo`) | 390 px | "question sets", "subagents in parallel", "run; the speed-mode row is the README's range." | reproducible |
+| Editable fields | `[contenteditable]` count | 320, 390, 1280 | 0 | reproducible |
+
+### Status
+Round 5 fixer pass complete. Ten objections adjudicated: eight ADAPT (2, 3, 4, 5, 6, 7, 9 by caption rather than a row label, 10) and two OVERRULE by scope or measurement (1, 8). One deviation from the request: decision 6 uses one-line messages instead of a 48 px slot inside the card, and decision 5 keeps the model name in Step 2 (31 words, not about 27). No WHOLE re-judgment, so S1 to S5 are not claimed.

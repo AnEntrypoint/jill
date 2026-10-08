@@ -58,8 +58,9 @@ Do these steps yourself, in this conversation. Do not run a shell command for th
    the full text of `references/subagent-prompt.md`, then a line `STATE:` and that state's text,
    then `QUESTIONS:` and that set's question JSON array.
 2. **Dispatch.** For every chunk of every state, make one Agent-tool call with
-   `model: "haiku"`, `effort: "low"`, `subagent_type: "Explore"` and `prompt` set to that
-   chunk's prompt. Send all calls in one message so they run in parallel, across states too.
+   `model: "haiku"`, `effort: "low"` and `prompt` set to that chunk's prompt. Use
+   `subagent_type: "jill-decider"` when that agent is listed, since it ships with the plugin and
+   has a single tool. Otherwise use `subagent_type: "Explore"`. Send all calls in one message so they run in parallel, across states too.
 3. **Merge.** Each subagent replies with one line per question in the form `id|value|confidence`.
    Split each line on `|` and take the three fields. Do not ask for JSON: plain lines cost fewer
    output tokens and come back faster. For each question id, take its single line and check it: a choice value must be one of the options, a score must lie inside
