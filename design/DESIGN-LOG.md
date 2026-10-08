@@ -613,3 +613,59 @@ Total WHOLE rounds across the log: 12 (R1 to R4 in run 1; W1 to W5 in run 2; W6 
 | policy list rows | `ul.policies li` | 15 | 15 | reproducible |
 | model token line | client rects of the `code` | 1 | one line | reproducible |
 | page height | `bodyScrollHeight` | 390 px: 6141; 1280 px: 5364 | — | reproducible |
+
+## 17. Run 4: capped final attempt (W9 to W11), S2 and S3 target
+
+Mode Adaptive (unchanged). Tools: Agent, ten fresh general-purpose agents per round, one per reference (Debord, Shklovsky, Holmes, Mace, Krug, Nielsen, Tufte, Cairo, Sennett, Bringhurst), each given only the page, two renders and the sources. Measurement: `/usr/bin/chromium --headless`, iframe harness in the scratchpad. One harness was overwritten by a critic's probe during W10, so the figures below come from harnesses rebuilt under new names (`w11-harness.html`, `w12-harness.html`). Every figure was re-measured after the last edit (`w12-measure.txt`). gm: loaded; spool not dispatched (its `.gm/` writes fall inside the repo, which the brief forbids).
+
+### Premise checks (DADA 2d), item by item
+| Item | Premise measured | Result | Resolution |
+|---|---|---|---|
+| 15 px code | `pre` was 13 px at 390 and 1280 | TRUE | ADAPT: `pre` 15 px, 24 px line. All six blocks fit (390: 328/328, 358/358; 1280: 638/638, 672/672) |
+| Copy fallback text | "Copy failed, text selected" in `#copy` at 390 | FALSE as overflow: one line, button 232 x 44 px, one text rect | Text kept. Status line wording ("Press Ctrl+C or Cmd+C") assumes a keyboard: ADAPT to "Copy it with Ctrl+C or Cmd+C, or from your device's copy menu." (2 lines at 390) |
+| `noul` gloss | first use "A noul answer must be yes or no" precedes the card (Merge step 3) | TRUE | ADAPT: inline gloss at first use, Merge reworked as a list (W10 Krug, Holmes) |
+| 24 px baseline | body line-height 25.6 px (390) and 27.2 px (1280); paragraph gap 14 px | TRUE | ADAPT: body 16/24 at all widths; paragraph gap 12; section padding 48/72; `pre` 24 px line |
+| Lead against h3 size | lead 18.4 px, h3 19.2 px | TRUE (W9 Bringhurst) | ADAPT: lead 1.2rem, so lead and h3 share 19.2 px |
+| Triage verbatim | source wording "What kind of message is this?" / "A person must see this now." | TRUE that the page text differs. Verbatim at 15 px overflows: `pre` scrollWidth 457 against 358 (390) | Tufte's "quote verbatim" OVERRULED by measurement. Caption ADAPT: "reworded", not "shortened" |
+| Policy list orphan | last line of the intro at 1280 is 38 px ("noul.") | TRUE | ADAPT: "score&nbsp;or&nbsp;noul." (last line 103 px) |
+| Lead orphan at 1280 (W11) | last line "model." (Bringhurst scratch test) | TRUE | ADAPT: `text-wrap: pretty` on `.lead` (3 lines, last line 142 px) |
+| Step numbering (W11, 7 of 10) | `ol.steps li` matched the nested `ul.checks li`; counters 4 to 7 | TRUE, a regression from W10's Merge list | ADAPT: `ol.steps > li` for counter, padding and `::before`. Measured after: `ol.steps > li` pseudo content `counter(step)` x3; `ul.checks li` `none` x4 |
+| List semantics (Holmes, Mace) | `list-style: none` on `ol.steps` and `ul.policies` | Argued (Safari drops list role); not tested with assistive technology | ADAPT: `role="list"` on both; sr-only "Step N:" in each step heading |
+| Shklovsky W10, example state | no state sample beside the example reply | TRUE | ADAPT: one line naming the state the reply answers |
+| Shklovsky W10, type cards | Noul card has no options or scale, and nothing says so | PARTLY TRUE | ADAPT: one sentence in the Noul card. Accent colour request OVERRULED (decoration, not in the brief) |
+| Krug W6 and W9, Jev in the lead | "in place of TypeSafe's Jev, a cloud decision model" in one clause | FALSE: the term is glossed in its own clause | OVERRULE (text measurement) |
+| Krug W10, "six sentences" in Step 3 | the paragraph has four sentences | FALSE on the count; the density itself is TRUE | ADAPT: Step 3 as a four-item list (also Holmes W10) |
+| Debord W9, W10, copy control on a triage or example block | none; the brief asks for explanation, a list and a link | — | OVERRULE by MAYA (Adaptive): the page's job is explanation; the sets are in the linked `policies.md`; per-block copy controls were already deferred (section 15) |
+| Live-run objections (W6, W7) | the static medium has no runtime | TRUE | OVERRULE by medium under MAYA. The objection stays in the log |
+| Debord W10, example prompt as copyable | none | — | OVERRULE, same reason as above |
+
+### Rounds
+| Round | PASS | OBJECT | Andon pulled | Action |
+|---|---|---|---|---|
+| W9 (fresh ten) | Nielsen, Cairo, Sennett (3 of 10) | Debord, Shklovsky, Holmes, Mace, Krug, Tufte, Bringhurst (7) | none | ADAPTs and OVERRULEs above |
+| W10 (fresh ten) | Mace, Nielsen, Tufte, Cairo, Sennett (5 of 10) | Debord, Shklovsky, Holmes, Krug, Bringhurst (5) | none | ADAPTs and OVERRULEs above; Step 3 list, sample state, type-card sentence, nbsp, lead size |
+| W11 (fresh ten) | none (0 of 10) | all ten. Common finding (7 of 10): the nested Merge checks show counters 4 to 7 | Krug, Debord, Sennett, Tufte | ADAPT: selector scope (`ol.steps > li`); lead `text-wrap: pretty`. Fixed after the round, so not re-judged by a panel (cap reached: W9, W10, W11 are the three WHOLE rounds of this run) |
+
+### Stop test (run 4)
+- S1 (Frontier, no OPEN item): MET on paper. Every item above is ADAPT (measured after the edit), OVERRULE (reason and measurement stated) or DEFERRED. The W11 fixes were not re-judged by a panel.
+- S2 (WHOLE round, every required critic PASS, no Andon): NOT MET. W9 3 of 10; W10 5 of 10; W11 0 of 10.
+- S3 (two consecutive clean WHOLE rounds): NOT MET. No round was clean.
+- S4 (ambition push, measured): NOT MET this run. No Breaker was pushed in run 4; the run 2 push (M10) was SCRAPPED.
+- S5 (dotted edges from used anchors): carried from section 16, not re-audited in run 4.
+
+### Final-state measurements (after the last edit; `w12-measure.txt`, `final3.html` identical to the docs page)
+| Printed figure | Procedure | 390 px | 1280 px | Result |
+|---|---|---|---|---|
+| no horizontal scroll | `scrollWidth` vs `clientWidth` | 390 / 390 | 1280 / 1280 | reproducible |
+| every `pre` fits | `scrollWidth` vs `clientWidth` | 328, 328, 328, 358, 358, 358 (all equal) | 638, 638, 638, 672, 672, 672 (all equal) | reproducible |
+| step counters | `::before` content of `ol.steps > li` | `counter(step)` x3 | same | reproducible |
+| nested checks | `::before` content of `ul.checks li` | `none` x4 | same | reproducible |
+| lead line box | computed font / line-height | 19.2 px / 24 px | same | reproducible |
+| lead last line | line rects of `.lead` | 346 px, 4 lines | 142 px, 3 lines | reproducible |
+| footer bottom (page height) | `getBoundingClientRect` | 6424 px | 5561 px | reproducible |
+| speed figures | text match to README Speed | 3.4 s, 4.1 s, 16.5k, 8.9 s, 2.8 s, 2.4 s all present; page height and figures unchanged | | reproducible |
+| policy sets | `ul.policies li` count (final2) | 15 | 15 | reproducible |
+| "calibrat" on page | text count | 0 | 0 | reproducible |
+
+### Status
+Run 4 INCOMPLETE against S2 and S3. Three WHOLE rounds run (W9, W10, W11); the cap was reached. Open at close: the W11 critics' verdicts on the post-round fixes (step numbering, lead orphan) are unjudged; the W10 and W11 objections that were OVERRULED (copy controls, live run, Jev, verbatim triage) stay in this log; S4 and S5 were not re-audited this run.
