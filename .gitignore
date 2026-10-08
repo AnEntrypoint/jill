@@ -1,0 +1,4 @@
+.gm/
+.agentplug*/
+node_modules/
+.jev-cache/

@@ -1,0 +1,10 @@
+{
+  "name": "jev-local",
+  "version": "1.0.0",
+  "description": "Local typed decision engine (Choice, Score, Noul) that replaces the cloud Jev model. The agent running the skill dispatches a claude-haiku-5-5 subagent to answer.",
+  "author": {"name": "lanmower"},
+  "homepage": "https://anentrypoint.github.io/richard/",
+  "repository": "https://github.com/AnEntrypoint/richard",
+  "license": "MIT",
+  "keywords": ["skills", "decision", "routing", "triage", "haiku", "jev"]
+}
