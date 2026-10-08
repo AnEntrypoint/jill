@@ -59,6 +59,12 @@ Measured on the Agent path, single samples with about one second of noise:
 - `statusline-setup` halves the tokens (8.6k) but has an Edit tool, so it is not the default.
 - Escalating two uncertain answers to `sonnet` at low effort: 2.4 s.
 - `Plan` and `Explore` cost the same (4.3 s and 16.7k tokens).
+- Large batches, dense protocol (`skills/jill/references/dense-protocol.md`): 200 items in one
+  call took 24 s and 27.6k tokens, against 31 s and 30.2k for a verbose line format. 2,000 items
+  in four parallel calls of 500 took about 64 s and about 180k tokens in total. Ids are checked
+  after each merge: two ids went missing at range boundaries in that run.
+- Mixed question sets in one stream (triage and injection screening alternating): lane 100%,
+  injection 99% on 100 items each.
 - Two frontiers. Speed mode, the default: parallel 8-question calls, about 3.4 to 4.1 s and about
   33k tokens for 16 questions. Token mode: one 16-question call, 6.5 s and 17.6k tokens.
 

@@ -77,6 +77,11 @@ Do these steps yourself, in this conversation. Do not run a shell command for th
   in a single call with `model: "sonnet"` and `effort: "low"`, carrying only the uncertain
   questions and the same state. Confident answers never leave the lightest model, so the
   common path stays fast. Use this only where the caller needs a firmer answer.
+- **Large batches.** For hundreds to thousands of items, use the dense protocol in
+  `references/dense-protocol.md`. The items sit in a file, each subagent reads its own range,
+  the reply is one short code line per item, and several question sets can share one stream.
+  After every merge, check that the returned ids match the requested ids, and re-dispatch
+  any missing ones.
 - **Policies as data.** Each policy in `references/policies.md` is a question set. Build new
   ones the same way. The caller maps answers to actions in its own notes, not in this skill.
 - **Repeat decisions.** A repeated identical state and question reuses the earlier answer from
