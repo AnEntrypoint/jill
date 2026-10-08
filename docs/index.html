@@ -1,0 +1,348 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>jev-local: typed decisions, locally</title>
+<meta name="description" content="jev-local answers small typed questions about a piece of text, using a claude-haiku-5-5 subagent in place of a cloud decision model.">
+<style>
+:root {
+  --bg: #faf8f4;
+  --ink: #1c1a17;
+  --muted: #5b564e;
+  --line: #e3ddd2;
+  --card: #ffffff;
+  --code: #f1ece3;
+  --accent: #0f766e;
+  --accent-ink: #ffffff;
+  --warm: #b45309;
+  color-scheme: light;
+}
+@media (prefers-color-scheme: dark) {
+  :root:not([data-theme="light"]) {
+    --bg: #15181b;
+    --ink: #f1ede6;
+    --muted: #b2aba0;
+    --line: #2c3238;
+    --card: #1c2024;
+    --code: #1f2428;
+    --accent: #5eead4;
+    --accent-ink: #0b1f1d;
+    --warm: #fbbf24;
+    color-scheme: dark;
+  }
+}
+:root[data-theme="dark"] {
+  --bg: #15181b;
+  --ink: #f1ede6;
+  --muted: #b2aba0;
+  --line: #2c3238;
+  --card: #1c2024;
+  --code: #1f2428;
+  --accent: #5eead4;
+  --accent-ink: #0b1f1d;
+  --warm: #fbbf24;
+  color-scheme: dark;
+}
+
+* { box-sizing: border-box; }
+html { -webkit-text-size-adjust: 100%; }
+body {
+  margin: 0;
+  background: var(--bg);
+  color: var(--ink);
+  font: 17px/1.6 system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  overflow-x: hidden;
+}
+.wrap { max-width: 44rem; margin: 0 auto; padding: 0 16px; }
+a { color: var(--accent); }
+code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberation Mono", monospace; }
+.nb { white-space: nowrap; }
+
+header.top {
+  display: flex; justify-content: space-between; align-items: center;
+  padding: 16px 0; border-bottom: 1px solid var(--line);
+}
+header.top .brand { font-weight: 700; color: var(--ink); text-decoration: none; }
+header.top a.gh { font-size: 15px; }
+
+section { padding: 40px 0 8px; }
+h1 {
+  font-size: clamp(2.25rem, 9vw, 3.5rem);
+  line-height: 1.05; letter-spacing: -0.02em; margin: 40px 0 16px;
+}
+h2 { font-size: 1.5rem; line-height: 1.25; margin: 0 0 12px; }
+h3 { font-size: 1.05rem; margin: 0 0 4px; }
+p, figcaption { margin: 0 0 14px; max-width: 66ch; }
+.kicker { color: var(--warm); font-weight: 600; font-size: 15px; margin: 0; }
+.lead { font-size: 1.15rem; color: var(--muted); margin: 0 0 28px; }
+.small { font-size: 15px; color: var(--muted); margin-top: 12px; }
+.small code { overflow-wrap: anywhere; }
+
+.install {
+  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
+  padding: 12px;
+}
+.install code {
+  flex: 1 1 200px; min-width: 0; font-size: 15px; overflow-wrap: anywhere;
+  color: var(--ink);
+}
+.copy {
+  background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 8px;
+  padding: 0 16px; min-height: 40px; font: inherit; font-weight: 600; cursor: pointer;
+}
+.copy:focus-visible, a:focus-visible { outline: 3px solid var(--warm); outline-offset: 2px; }
+.status { font-size: 15px; color: var(--muted); margin: 8px 0 0; }
+.status:empty { margin: 0; height: 0; }
+
+.hero-art { margin: 32px 0 0; }
+.hero-art svg { display: block; width: 100%; height: auto; }
+.hero-art .box { fill: var(--card); stroke: var(--accent); stroke-width: 2; }
+.hero-art .box-merge { fill: var(--accent); stroke: var(--accent); stroke-width: 2; }
+.hero-art .label { fill: var(--ink); font-size: 26px; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.hero-art .label-on { fill: var(--accent-ink); font-size: 26px; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
+.hero-art .wire { fill: none; stroke: var(--muted); stroke-width: 2; }
+.hero-art .head { fill: var(--muted); }
+.hero-art figcaption { font-size: 15px; color: var(--muted); margin-top: 8px; max-width: 50ch; }
+
+ol.steps { list-style: none; counter-reset: step; padding: 0; margin: 0; }
+ol.steps li {
+  counter-increment: step; position: relative; padding: 0 0 20px 48px; margin: 0;
+}
+ol.steps li::before {
+  content: counter(step); position: absolute; left: 0; top: 0;
+  width: 32px; height: 32px; border-radius: 50%;
+  background: var(--accent); color: var(--accent-ink);
+  display: grid; place-items: center; font-weight: 700;
+}
+ol.steps li p { margin: 0; color: var(--muted); }
+
+.types {
+  display: grid; gap: 16px;
+  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+}
+.types article {
+  background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px;
+  min-width: 0;
+}
+.types p { color: var(--muted); font-size: 16px; }
+pre {
+  background: var(--code); border-radius: 8px; padding: 12px; margin: 0;
+  font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word;
+  max-width: 100%;
+}
+
+ul.policies { list-style: none; padding: 0; margin: 0; }
+ul.policies li {
+  padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--muted);
+}
+ul.policies strong { color: var(--ink); }
+
+.bars { margin: 8px 0 0; }
+.bar-row { margin: 0 0 18px; }
+.bar-row p { margin: 0 0 6px; font-size: 16px; }
+.bar-row p strong { color: var(--ink); }
+.bar-row svg { display: block; width: 100%; height: 26px; }
+.bar-row rect { fill: var(--accent); }
+.axis {
+  display: flex; justify-content: space-between; gap: 8px;
+  font-size: 14px; color: var(--muted);
+  border-top: 1px solid var(--line); padding-top: 6px; margin: 0 0 20px;
+}
+
+.cta {
+  display: inline-block; margin-top: 8px; padding: 12px 20px; border-radius: 10px;
+  background: var(--accent); color: var(--accent-ink); font-weight: 600; text-decoration: none;
+}
+
+footer {
+  margin-top: 48px; padding: 24px 0 40px; border-top: 1px solid var(--line);
+  color: var(--muted); font-size: 15px;
+}
+
+@media (min-width: 640px) {
+  section { padding: 56px 0 8px; }
+  h1 { margin-top: 56px; }
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="top">
+  <a class="brand" href="#top">jev-local</a>
+  <a class="gh" href="https://github.com/AnEntrypoint/richard">GitHub</a>
+</header>
+
+<section id="top" style="padding-top: 0;">
+  <p class="kicker">Typed decisions, locally</p>
+  <h1>jev-local</h1>
+  <p class="lead">jev-local answers small typed questions about a piece of text, using a <span class="nb">claude-haiku-5-5</span> subagent in place of a cloud decision model.</p>
+
+  <div class="install" role="group" aria-label="Install command">
+    <code id="cmd">npx skills add AnEntrypoint/richard</code>
+    <button class="copy" id="copy" type="button">Copy</button>
+  </div>
+  <p class="status" id="status" role="status" aria-live="polite"></p>
+  <p class="small">Or add it as a plugin: <code>/plugin marketplace add AnEntrypoint/richard</code>, then <code>/plugin install jev-local@richard</code>.</p>
+
+  <figure class="hero-art" style="margin-left: 0; margin-right: 0;">
+    <svg viewBox="0 0 540 200" role="img" aria-label="One state fans out into three chunks, which merge back into answers." focusable="false">
+      <defs>
+        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+          <path class="head" d="M0,0 L10,5 L0,10 z"/>
+        </marker>
+      </defs>
+      <path class="wire" marker-end="url(#arr)" d="M130,100 C158,100 160,30 190,30"/>
+      <path class="wire" marker-end="url(#arr)" d="M130,100 L190,100"/>
+      <path class="wire" marker-end="url(#arr)" d="M130,100 C158,100 160,170 190,170"/>
+      <path class="wire" marker-end="url(#arr)" d="M350,30 C380,30 380,100 410,100"/>
+      <path class="wire" marker-end="url(#arr)" d="M350,100 L410,100"/>
+      <path class="wire" marker-end="url(#arr)" d="M350,170 C380,170 380,100 410,100"/>
+      <rect class="box" x="0" y="72" width="130" height="56" rx="10"/>
+      <text class="label" x="65" y="110" text-anchor="middle">state</text>
+      <rect class="box" x="190" y="6" width="160" height="48" rx="10"/>
+      <text class="label" x="270" y="40" text-anchor="middle">chunk 1</text>
+      <rect class="box" x="190" y="76" width="160" height="48" rx="10"/>
+      <text class="label" x="270" y="110" text-anchor="middle">chunk 2</text>
+      <rect class="box" x="190" y="146" width="160" height="48" rx="10"/>
+      <text class="label" x="270" y="180" text-anchor="middle">chunk 3</text>
+      <rect class="box-merge" x="410" y="72" width="130" height="56" rx="10"/>
+      <text class="label-on" x="475" y="110" text-anchor="middle">merge</text>
+    </svg>
+    <figcaption>One state (the text and facts a decision is about), split into chunks that run in parallel, then merged into answers.</figcaption>
+  </figure>
+</section>
+
+<section aria-labelledby="how">
+  <h2 id="how">How it works</h2>
+  <ol class="steps">
+    <li>
+      <h3>Prepare chunks</h3>
+      <p>Group the questions that share one state into chunks of up to eight.</p>
+    </li>
+    <li>
+      <h3>Dispatch Haiku subagents in parallel</h3>
+      <p>Send one <span class="nb">claude-haiku-5-5</span> subagent per chunk, all in one message. Each replies with JSON only.</p>
+    </li>
+    <li>
+      <h3>Merge</h3>
+      <p>Check that every question has exactly one answer, that choices are real options and that scores sit in range. Anything invalid is flagged, never guessed.</p>
+    </li>
+  </ol>
+</section>
+
+<section aria-labelledby="types">
+  <h2 id="types">Three question types</h2>
+  <p>Each question has one of three types.</p>
+  <div class="types">
+    <article>
+      <h3>Choice</h3>
+      <p>Pick one option.</p>
+      <pre>{"id": "lane", "type": "choice",
+ "question": "Which lane?",
+ "options": ["billing", "shipping", "support", "spam"]}</pre>
+    </article>
+    <article>
+      <h3>Score</h3>
+      <p>Place the state (the text being judged) on a scale.</p>
+      <pre>{"id": "urgency", "type": "score",
+ "question": "How urgent?",
+ "scale": [0, 1]}</pre>
+    </article>
+    <article>
+      <h3>Noul</h3>
+      <p>Is a yes or no statement true of the state?</p>
+      <pre>{"id": "refund", "type": "noul",
+ "question": "The customer asks for a refund."}</pre>
+    </article>
+  </div>
+  <h3 style="margin-top: 24px;">Example reply</h3>
+  <pre>{"id": "lane", "value": "billing", "confidence": 0.97}</pre>
+  <p class="small">One answer, in the shape the skill documents. Every answer carries its own confidence from 0 to 1. This one is an example, not a measured result.</p>
+</section>
+
+<section aria-labelledby="policies">
+  <h2 id="policies">Eight ready-made policies</h2>
+  <p>Question sets for common decisions, ready to paste into a batch.</p>
+  <ul class="policies">
+    <li><strong>Model routing</strong>: the cheapest model tier good enough for a turn. Risky work never goes to the cheapest tier.</li>
+    <li><strong>Skill selection</strong>: which installed skill a turn needs, or none.</li>
+    <li><strong>Triage</strong>: what kind of message it is, how urgent, and whether a person must see it now.</li>
+    <li><strong>Mailbox lanes</strong>: which lane a message belongs in, and whether it deserves attention.</li>
+    <li><strong>Memory filter</strong>: which retrieved passages help answer the current question.</li>
+    <li><strong>Turn selection</strong>: which turns to keep when a transcript has to be cut.</li>
+    <li><strong>Injection screen</strong>: whether a piece of web or tool output tries to instruct an agent.</li>
+    <li><strong>Command gate</strong>: whether a shell command is safe to run without review.</li>
+  </ul>
+</section>
+
+<section aria-labelledby="speed">
+  <h2 id="speed">Speed</h2>
+  <p>Recorded in the <a href="https://github.com/AnEntrypoint/richard#speed">project README</a>, with Haiku. Each figure is one value, not an average; the runs differ in chunk size and parallelism.</p>
+  <div class="bars" role="img" aria-label="Bar chart: 5.3 seconds for one chunk of 5 questions; 3.9 seconds and 6.4 seconds for two chunks of 8 questions run in parallel. All bars share one scale.">
+    <div class="bar-row" aria-hidden="true">
+      <p><strong>5.3 s</strong>, one chunk of 5 questions</p>
+      <svg viewBox="0 0 640 26" preserveAspectRatio="none" focusable="false"><rect x="0" y="0" width="530" height="26"/></svg>
+    </div>
+    <div class="bar-row" aria-hidden="true">
+      <p><strong>3.9 s</strong>, first chunk of 8 questions, run in parallel</p>
+      <svg viewBox="0 0 640 26" preserveAspectRatio="none" focusable="false"><rect x="0" y="0" width="390" height="26"/></svg>
+    </div>
+    <div class="bar-row" aria-hidden="true">
+      <p><strong>6.4 s</strong>, second chunk of 8 questions, run in parallel</p>
+      <svg viewBox="0 0 640 26" preserveAspectRatio="none" focusable="false"><rect x="0" y="0" width="640" height="26"/></svg>
+    </div>
+    <div class="axis" aria-hidden="true"><span>0 s</span><span>6.4 s, the same scale for all three bars</span></div>
+  </div>
+  <p>The README records about 30k tokens per subagent, mostly the gm opener, the standard setup text every subagent receives. Caching of an identical state and question is documented behaviour of the skill; it was not timed here.</p>
+  <a class="cta" href="https://github.com/AnEntrypoint/richard">Read the code on GitHub</a>
+</section>
+
+<footer>
+  <p style="margin: 0;">Made by lanmower. Source: <a href="https://github.com/AnEntrypoint/richard">AnEntrypoint/richard</a>, MIT licence.</p>
+</footer>
+
+</div>
+
+<script>
+(function () {
+  var btn = document.getElementById('copy');
+  var cmd = document.getElementById('cmd');
+  var status = document.getElementById('status');
+  if (!btn || !cmd) return;
+  var say = function (msg) { if (status) status.textContent = msg; };
+  var reset = function () { btn.textContent = 'Copy'; };
+  var select = function () {
+    try {
+      var range = document.createRange();
+      range.selectNodeContents(cmd);
+      var sel = window.getSelection();
+      sel.removeAllRanges();
+      sel.addRange(range);
+    } catch (e) { /* no selection support */ }
+    say('Command selected. Press Ctrl+C or Cmd+C to copy it.');
+  };
+  btn.addEventListener('click', function () {
+    var text = cmd.textContent.trim();
+    if (navigator.clipboard && navigator.clipboard.writeText) {
+      navigator.clipboard.writeText(text).then(function () {
+        btn.textContent = 'Copied';
+        say('Install command copied.');
+        setTimeout(reset, 1600);
+      }, function () {
+        btn.textContent = 'Copy failed, text selected';
+        select();
+        setTimeout(reset, 1600);
+      });
+      return;
+    }
+    btn.textContent = 'Text selected';
+    select();
+    setTimeout(reset, 1600);
+  });
+})();
+</script>
+</body>
+</html>

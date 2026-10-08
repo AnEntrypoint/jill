@@ -1,4 +1,5 @@
 .gm/
 .agentplug*/
+.claude/
 node_modules/
 .jev-cache/
