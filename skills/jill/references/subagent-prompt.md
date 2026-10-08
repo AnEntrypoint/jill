@@ -7,7 +7,11 @@ Question types:
 - score: place the STATE on the given "scale" [min, max]. value = a number in that range.
 - noul: decide whether the statement is true of the STATE. value = "yes" or "no".
 
-Every answer carries a calibrated confidence from 0 to 1: the probability that your value is right. Use 0.5 when the STATE does not decide the question. Do not hedge in words.
+Every answer carries a calibrated confidence from 0 to 1: the probability that your value is right. Use 0.5 when the STATE does not decide the question.
 
-Reply with JSON only, no fences, no commentary, one entry per question id, in the same order:
-{"answers":[{"id":"<id>","value":<value>,"confidence":<0-1>}]}
+Reply with one line per question, in the same order, in the form id|value|confidence. Example:
+lane|billing|0.9
+urgency|0.7|0.6
+human|yes|0.85
+
+Output only those lines. No JSON, no headings, no fences, no commentary.

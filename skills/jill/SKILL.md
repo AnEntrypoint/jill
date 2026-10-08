@@ -60,8 +60,9 @@ Do these steps yourself, in this conversation. Do not run a shell command for th
 2. **Dispatch.** For every chunk of every state, make one Agent-tool call with
    `model: "haiku"`, `effort: "low"`, `subagent_type: "Explore"` and `prompt` set to that
    chunk's prompt. Send all calls in one message so they run in parallel, across states too.
-3. **Merge.** Parse each subagent's reply as JSON. For each question id, take its single
-   answer and check it: a choice value must be one of the options, a score must lie inside
+3. **Merge.** Each subagent replies with one line per question in the form `id|value|confidence`.
+   Split each line on `|` and take the three fields. Do not ask for JSON: plain lines cost fewer
+   output tokens and come back faster. For each question id, take its single line and check it: a choice value must be one of the options, a score must lie inside
    its scale, and a noul value must be the string `"yes"` or `"no"`. Convert a valid noul
    value to the boolean output: `"yes"` becomes `true`, `"no"` becomes `false`. Set `value`
    to `null` and `confidence` to `0` on any failure, and set `error`. Return the merged answers,
@@ -109,6 +110,8 @@ Single samples unless stated. Timing noise is about plus or minus one second.
   is not the default (see the untrusted-text rule above).
 - Escalation: two uncertain questions re-asked on `sonnet` at low effort took 2.4 s and 15.6k
   tokens. The tier answer moved from medium at 0.5 to large at 0.8.
+- Plain-line replies (`id|value|confidence`) instead of JSON, same 8-question set: 3.2 s and 3.4 s,
+  about 16.5k tokens. A small gain. Most tokens are the fixed subagent overhead, not the reply.
 - `Plan` and `Explore` cost the same: 4.3 s and 16.7k tokens against 3.4 to 4.1 s and 16.5k for
   `Explore`. Keep `Explore`.
 - Two frontiers, both measured. Speed mode (default): parallel 8-question calls, about 3.4 to 4.1 s
