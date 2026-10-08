@@ -49,6 +49,18 @@ Measured defect that this check catches: a 2,000-item run in four calls of 500 r
 parseable lines, but ids 1000 and 2000 were missing and id 500 came back twice, at the range
 boundaries. Every line that came back was well-formed.
 
+## Rejected: packed output (measured worse)
+
+Packing answers into long lines with no separators (for example 25 items per line, 100 characters
+each) looks smaller on paper. Measured in pairs, under the same conditions, on 200 items:
+
+- dense, one line per item: 21.0 s, 26.8k subagent tokens
+- packed, 8 lines of 100 characters with no separators: 34.5 s, 31.1k subagent tokens
+
+Letter-digit runs without separators tokenise badly, and the model slows down on them. Keep one
+line per item. An earlier packed run that used spaces and two tool calls measured 41.3k tokens,
+but it re-read the file, so it is not a fair comparison.
+
 ## Sizing (measured)
 
 - 200 items in one call, dense: 24.0 s, 27.6k subagent tokens.
