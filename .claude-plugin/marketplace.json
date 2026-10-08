@@ -1,10 +1,10 @@
 {
-  "name": "richard",
+  "name": "jill",
   "owner": {"name": "lanmower"},
   "metadata": {"description": "Agent skills by lanmower"},
   "plugins": [
     {
-      "name": "jev-local",
+      "name": "jill",
       "source": "./",
       "description": "Local typed decision engine that replaces the cloud Jev model. Runs as a haiku subagent inside the agent.",
       "category": "productivity"

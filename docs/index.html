@@ -3,8 +3,8 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
-<title>jev-local: typed decisions, locally</title>
-<meta name="description" content="jev-local answers small typed questions about a piece of text, using a claude-haiku-5-5 subagent in place of a cloud decision model.">
+<title>jill: typed decisions, locally</title>
+<meta name="description" content="jill answers small typed questions about a piece of text, using a claude-haiku-5-5 subagent in place of a cloud decision model.">
 <style>
 :root {
   --bg: #faf8f4;
@@ -64,7 +64,7 @@ header.top {
   padding: 16px 0; border-bottom: 1px solid var(--line);
 }
 header.top .brand { font-weight: 700; color: var(--ink); text-decoration: none; }
-header.top a.gh { font-size: 15px; }
+header.top a.gh { font-size: 15px; min-height: 44px; display: inline-flex; align-items: center; }
 
 section { padding: 40px 0 8px; }
 h1 {
@@ -72,8 +72,8 @@ h1 {
   line-height: 1.05; letter-spacing: -0.02em; margin: 40px 0 16px;
 }
 h2 { font-size: 1.5rem; line-height: 1.25; margin: 0 0 12px; }
-h3 { font-size: 1.05rem; margin: 0 0 4px; }
-p, figcaption { margin: 0 0 14px; max-width: 66ch; }
+h3 { font-size: 1.2rem; line-height: 1.3; margin: 0 0 4px; }
+p, figcaption { margin: 0 0 14px; max-width: 60ch; }
 .kicker { color: var(--warm); font-weight: 600; font-size: 15px; margin: 0; }
 .lead { font-size: 1.15rem; color: var(--muted); margin: 0 0 28px; }
 .small { font-size: 15px; color: var(--muted); margin-top: 12px; }
@@ -82,7 +82,7 @@ p, figcaption { margin: 0 0 14px; max-width: 66ch; }
 .install {
   display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
   background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-  padding: 12px;
+  padding: 12px; margin-bottom: 16px;
 }
 .install code {
   flex: 1 1 200px; min-width: 0; font-size: 15px; overflow-wrap: anywhere;
@@ -90,14 +90,14 @@ p, figcaption { margin: 0 0 14px; max-width: 66ch; }
 }
 .copy {
   background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 8px;
-  padding: 0 16px; min-height: 40px; font: inherit; font-weight: 600; cursor: pointer;
+  padding: 0 16px; min-height: 44px; font: inherit; font-weight: 600; cursor: pointer;
 }
 .copy:focus-visible, a:focus-visible { outline: 3px solid var(--warm); outline-offset: 2px; }
 .status { font-size: 15px; color: var(--muted); margin: 8px 0 0; }
 .status:empty { margin: 0; height: 0; }
 
 .hero-art { margin: 32px 0 0; }
-.hero-art svg { display: block; width: 100%; height: auto; }
+.hero-art svg { display: block; width: 100%; max-width: 480px; height: auto; }
 .hero-art .box { fill: var(--card); stroke: var(--accent); stroke-width: 2; }
 .hero-art .box-merge { fill: var(--accent); stroke: var(--accent); stroke-width: 2; }
 .hero-art .label { fill: var(--ink); font-size: 26px; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
@@ -118,10 +118,7 @@ ol.steps li::before {
 }
 ol.steps li p { margin: 0; color: var(--muted); }
 
-.types {
-  display: grid; gap: 16px;
-  grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
-}
+.types { display: grid; gap: 16px; grid-template-columns: 1fr; }
 .types article {
   background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px;
   min-width: 0;
@@ -129,27 +126,22 @@ ol.steps li p { margin: 0; color: var(--muted); }
 .types p { color: var(--muted); font-size: 16px; }
 pre {
   background: var(--code); border-radius: 8px; padding: 12px; margin: 0;
-  font-size: 14px; line-height: 1.5; white-space: pre-wrap; word-break: break-word;
+  font-size: 14px; line-height: 1.5; white-space: pre; overflow-x: auto;
   max-width: 100%;
+}
+@media (max-width: 480px) {
+  body { font-size: 16px; }
+  .types article { padding: 14px; }
+  .types pre { font-size: 13px; padding: 10px; }
 }
 
 ul.policies { list-style: none; padding: 0; margin: 0; }
 ul.policies li {
   padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--muted);
+  max-width: 66ch;
 }
 ul.policies strong { color: var(--ink); }
 
-.bars { margin: 8px 0 0; }
-.bar-row { margin: 0 0 18px; }
-.bar-row p { margin: 0 0 6px; font-size: 16px; }
-.bar-row p strong { color: var(--ink); }
-.bar-row svg { display: block; width: 100%; height: 26px; }
-.bar-row rect { fill: var(--accent); }
-.axis {
-  display: flex; justify-content: space-between; gap: 8px;
-  font-size: 14px; color: var(--muted);
-  border-top: 1px solid var(--line); padding-top: 6px; margin: 0 0 20px;
-}
 
 .cta {
   display: inline-block; margin-top: 8px; padding: 12px 20px; border-radius: 10px;
@@ -171,47 +163,44 @@ footer {
 <div class="wrap">
 
 <header class="top">
-  <a class="brand" href="#top">jev-local</a>
-  <a class="gh" href="https://github.com/AnEntrypoint/richard">GitHub</a>
+  <a class="brand" href="#top">jill</a>
+  <a class="gh" href="https://github.com/AnEntrypoint/jill">GitHub</a>
 </header>
 
 <section id="top" style="padding-top: 0;">
   <p class="kicker">Typed decisions, locally</p>
-  <h1>jev-local</h1>
-  <p class="lead">jev-local answers small typed questions about a piece of text, using a <span class="nb">claude-haiku-5-5</span> subagent in place of a cloud decision model.</p>
+  <h1>jill</h1>
+  <p class="lead">jill answers small typed questions about a piece of text, using a <span class="nb">claude-haiku-5-5</span> subagent in place of TypeSafe's Jev, a cloud decision model.</p>
 
   <div class="install" role="group" aria-label="Install command">
-    <code id="cmd">npx skills add AnEntrypoint/richard</code>
+    <code id="cmd">npx skills add AnEntrypoint/jill</code>
     <button class="copy" id="copy" type="button">Copy</button>
   </div>
   <p class="status" id="status" role="status" aria-live="polite"></p>
-  <p class="small">Or add it as a plugin: <code>/plugin marketplace add AnEntrypoint/richard</code>, then <code>/plugin install jev-local@richard</code>.</p>
+  <p>Needs Node.js for <code>npx</code>. jill is one skill in the jill repository. Run it in an agent that has an Agent tool, such as Claude Code, and ask for it, for example: <em>Use jill: which lane should this message go in, and does a person need to see it now?</em></p>
+  <p class="small">The agent dispatches the Haiku subagents itself. In Claude Code you can add it as a plugin instead: <code>/plugin marketplace add AnEntrypoint/jill</code>, then <code>/plugin install jill@jill</code>.</p>
 
   <figure class="hero-art" style="margin-left: 0; margin-right: 0;">
-    <svg viewBox="0 0 540 200" role="img" aria-label="One state fans out into three chunks, which merge back into answers." focusable="false">
+    <svg viewBox="0 0 540 200" role="img" aria-label="One state is copied into a chunk of eight questions and a chunk of two, which run in parallel and merge back into answers." focusable="false">
       <defs>
         <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
           <path class="head" d="M0,0 L10,5 L0,10 z"/>
         </marker>
       </defs>
-      <path class="wire" marker-end="url(#arr)" d="M130,100 C158,100 160,30 190,30"/>
-      <path class="wire" marker-end="url(#arr)" d="M130,100 L190,100"/>
-      <path class="wire" marker-end="url(#arr)" d="M130,100 C158,100 160,170 190,170"/>
-      <path class="wire" marker-end="url(#arr)" d="M350,30 C380,30 380,100 410,100"/>
-      <path class="wire" marker-end="url(#arr)" d="M350,100 L410,100"/>
-      <path class="wire" marker-end="url(#arr)" d="M350,170 C380,170 380,100 410,100"/>
+      <path class="wire" marker-end="url(#arr)" d="M130,100 C158,100 160,54 190,54"/>
+      <path class="wire" marker-end="url(#arr)" d="M130,100 C158,100 160,146 190,146"/>
+      <path class="wire" marker-end="url(#arr)" d="M350,54 C380,54 380,100 410,100"/>
+      <path class="wire" marker-end="url(#arr)" d="M350,146 C380,146 380,100 410,100"/>
       <rect class="box" x="0" y="72" width="130" height="56" rx="10"/>
       <text class="label" x="65" y="110" text-anchor="middle">state</text>
-      <rect class="box" x="190" y="6" width="160" height="48" rx="10"/>
-      <text class="label" x="270" y="40" text-anchor="middle">chunk 1</text>
-      <rect class="box" x="190" y="76" width="160" height="48" rx="10"/>
-      <text class="label" x="270" y="110" text-anchor="middle">chunk 2</text>
-      <rect class="box" x="190" y="146" width="160" height="48" rx="10"/>
-      <text class="label" x="270" y="180" text-anchor="middle">chunk 3</text>
+      <rect class="box" x="190" y="30" width="160" height="48" rx="10"/>
+      <text class="label" x="270" y="63" text-anchor="middle">8 questions</text>
+      <rect class="box" x="190" y="122" width="160" height="48" rx="10"/>
+      <text class="label" x="270" y="155" text-anchor="middle">2 questions</text>
       <rect class="box-merge" x="410" y="72" width="130" height="56" rx="10"/>
       <text class="label-on" x="475" y="110" text-anchor="middle">merge</text>
     </svg>
-    <figcaption>One state (the text and facts a decision is about), split into chunks that run in parallel, then merged into answers.</figcaption>
+    <figcaption>One state (your text and the facts a decision is about), copied into each chunk. Ten questions split into a chunk of eight and a chunk of two, which run in parallel and merge into answers.</figcaption>
   </figure>
 </section>
 
@@ -224,11 +213,11 @@ footer {
     </li>
     <li>
       <h3>Dispatch Haiku subagents in parallel</h3>
-      <p>Send one <span class="nb">claude-haiku-5-5</span> subagent per chunk, all in one message. Each replies with JSON only.</p>
+      <p>Send one subagent per chunk on the <span class="nb">claude-haiku-5-5</span> model (<code>model: "haiku"</code>), all in one message. Each uses the read-only <code>Explore</code> agent type, which cannot write files, at low effort, and replies with JSON only.</p>
     </li>
     <li>
       <h3>Merge</h3>
-      <p>Check that every question has exactly one answer, that choices are real options and that scores sit in range. Anything invalid is flagged, never guessed.</p>
+      <p>Check that every question has exactly one answer, that choices are real options and that scores sit in range. A noul answer must be yes or no, which becomes true or false. Anything invalid is flagged, never guessed. Below 0.6 confidence, escalate the answer or route it to a person.</p>
     </li>
   </ol>
 </section>
@@ -240,32 +229,58 @@ footer {
     <article>
       <h3>Choice</h3>
       <p>Pick one option.</p>
-      <pre>{"id": "lane", "type": "choice",
- "question": "Which lane?",
- "options": ["billing", "shipping", "support", "spam"]}</pre>
+      <pre>{
+  "id": "lane",
+  "type": "choice",
+  "question": "Which lane?",
+  "options": [
+    "billing",
+    "shipping",
+    "support",
+    "spam"
+  ]
+}</pre>
     </article>
     <article>
       <h3>Score</h3>
-      <p>Place the state (the text being judged) on a scale.</p>
-      <pre>{"id": "urgency", "type": "score",
- "question": "How urgent?",
- "scale": [0, 1]}</pre>
+      <p>Place the state (the text being judged) on a scale. The ends are the question's own, for example 0 for not urgent and 1 for most urgent.</p>
+      <pre>{
+  "id": "urgency",
+  "type": "score",
+  "question": "How urgent?",
+  "scale": [0, 1]
+}</pre>
     </article>
     <article>
-      <h3>Noul</h3>
+      <h3>Noul (yes or no)</h3>
       <p>Is a yes or no statement true of the state?</p>
-      <pre>{"id": "refund", "type": "noul",
- "question": "The customer asks for a refund."}</pre>
+      <pre>{
+  "id": "refund",
+  "type": "noul",
+  "question": "Asks for a refund."
+}</pre>
     </article>
   </div>
   <h3 style="margin-top: 24px;">Example reply</h3>
-  <pre>{"id": "lane", "value": "billing", "confidence": 0.97}</pre>
-  <p class="small">One answer, in the shape the skill documents. Every answer carries its own confidence from 0 to 1. This one is an example, not a measured result.</p>
+  <pre>{
+  "id": "lane",
+  "value": "billing",
+  "confidence": 0.97
+}</pre>
+  <p class="small">One answer, in the shape the skill documents. Every answer carries its own confidence from 0 to 1. Below 0.6, the state did not settle the question, so escalate it or route it to a person. This one is an example, not a measured result.</p>
+  <h3 style="margin-top: 24px;">A failed answer</h3>
+  <pre>{
+  "id": "lane",
+  "value": null,
+  "confidence": 0,
+  "error": "not_an_option"
+}</pre>
+  <p class="small">An answer that is missing or invalid comes back unknown, with an error field. The caller never guesses. If a chunk's reply fails to parse, the skill re-dispatches that chunk once; if it still fails, those answers stay unknown and the caller takes its default path.</p>
 </section>
 
 <section aria-labelledby="policies">
-  <h2 id="policies">Eight ready-made policies</h2>
-  <p>Question sets for common decisions, ready to paste into a batch.</p>
+  <h2 id="policies">Eleven ready-made policies</h2>
+  <p>Question sets for common decisions, in <a href="https://github.com/AnEntrypoint/jill/blob/main/skills/jill/references/policies.md">references/policies.md</a>, ready to paste as a question list. To write your own, give each question an id and pick one type: choice, score or noul.</p>
   <ul class="policies">
     <li><strong>Model routing</strong>: the cheapest model tier good enough for a turn. Risky work never goes to the cheapest tier.</li>
     <li><strong>Skill selection</strong>: which installed skill a turn needs, or none.</li>
@@ -273,35 +288,50 @@ footer {
     <li><strong>Mailbox lanes</strong>: which lane a message belongs in, and whether it deserves attention.</li>
     <li><strong>Memory filter</strong>: which retrieved passages help answer the current question.</li>
     <li><strong>Turn selection</strong>: which turns to keep when a transcript has to be cut.</li>
-    <li><strong>Injection screen</strong>: whether a piece of web or tool output tries to instruct an agent.</li>
+    <li><strong>Injection screen</strong>: whether web or tool output tries to instruct an agent.</li>
     <li><strong>Command gate</strong>: whether a shell command is safe to run without review.</li>
+    <li><strong>Pull request risk</strong>: how risky a change is, and whether a senior engineer must review it.</li>
+    <li><strong>Incident severity</strong>: how bad an incident is, and whether on-call must be paged now.</li>
+    <li><strong>Personal data</strong>: whether a text holds personal or sensitive information, and whether it can be shared.</li>
   </ul>
+  <h3 style="margin-top: 24px;">Worked example: triage</h3>
+  <pre>[
+  {
+    "id": "kind",
+    "type": "choice",
+    "question": "What kind is it?",
+    "options": [
+      "bug",
+      "question",
+      "request",
+      "billing",
+      "other"
+    ]
+  },
+  {
+    "id": "urgency",
+    "type": "score",
+    "question": "How urgent is it?",
+    "scale": [0, 1]
+  },
+  {
+    "id": "human",
+    "type": "noul",
+    "question": "Needs a person now."
+  }
+]</pre>
+  <p class="small">Reworded from policies.md to fit a phone. The exact triage set is in that file. The caller maps the answers to actions itself.</p>
 </section>
 
 <section aria-labelledby="speed">
   <h2 id="speed">Speed</h2>
-  <p>Recorded in the <a href="https://github.com/AnEntrypoint/richard#speed">project README</a>, with Haiku. Each figure is one value, not an average; the runs differ in chunk size and parallelism.</p>
-  <div class="bars" role="img" aria-label="Bar chart: 5.3 seconds for one chunk of 5 questions; 3.9 seconds and 6.4 seconds for two chunks of 8 questions run in parallel. All bars share one scale.">
-    <div class="bar-row" aria-hidden="true">
-      <p><strong>5.3 s</strong>, one chunk of 5 questions</p>
-      <svg viewBox="0 0 640 26" preserveAspectRatio="none" focusable="false"><rect x="0" y="0" width="530" height="26"/></svg>
-    </div>
-    <div class="bar-row" aria-hidden="true">
-      <p><strong>3.9 s</strong>, first chunk of 8 questions, run in parallel</p>
-      <svg viewBox="0 0 640 26" preserveAspectRatio="none" focusable="false"><rect x="0" y="0" width="390" height="26"/></svg>
-    </div>
-    <div class="bar-row" aria-hidden="true">
-      <p><strong>6.4 s</strong>, second chunk of 8 questions, run in parallel</p>
-      <svg viewBox="0 0 640 26" preserveAspectRatio="none" focusable="false"><rect x="0" y="0" width="640" height="26"/></svg>
-    </div>
-    <div class="axis" aria-hidden="true"><span>0 s</span><span>6.4 s, the same scale for all three bars</span></div>
-  </div>
-  <p>The README records about 30k tokens per subagent, mostly the gm opener, the standard setup text every subagent receives. Caching of an identical state and question is documented behaviour of the skill; it was not timed here.</p>
-  <a class="cta" href="https://github.com/AnEntrypoint/richard">Read the code on GitHub</a>
+  <p>The timings in the <a href="https://github.com/AnEntrypoint/jill#speed">project README</a> are single samples, with about a second of noise, so read them as rough.</p>
+  <p>One 16-question chunk took 8.5 s at default effort, a single sample. The skill keeps each chunk at eight questions or fewer.</p>
+  <p>Identical decisions on the same state are reused within a conversation, so repeats cost no model call. The skill's speed and token notes list the other measurements.</p>
 </section>
 
 <footer>
-  <p style="margin: 0;">Made by lanmower. Source: <a href="https://github.com/AnEntrypoint/richard">AnEntrypoint/richard</a>, MIT licence.</p>
+  <p style="margin: 0;">Made by lanmower. Source: <a href="https://github.com/AnEntrypoint/jill">AnEntrypoint/jill</a>, MIT licence.</p>
 </footer>
 
 </div>

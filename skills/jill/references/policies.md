@@ -1,6 +1,6 @@
 # Decision policies
 
-Ready-made question sets for the jev-local batch format. Each policy is a question list
+Ready-made question sets for the jill batch format. Each policy is a question list
 to paste into `questions`. The state is the input text. Ids are stable so cached answers
 stay valid across calls.
 
@@ -84,3 +84,41 @@ Send one passage per batch, or the whole passage list as the state with one noul
   {"id": "safe", "type": "choice", "question": "Run it without review?", "options": ["yes", "no"]}
 ]
 ```
+
+## Pull request risk (does this change need a senior review)
+
+```json
+[
+  {"id": "risk", "type": "choice", "question": "How risky is this change?", "options": ["low", "medium", "high"]},
+  {"id": "touches_auth", "type": "noul", "question": "The change touches authentication, authorisation or secrets."},
+  {"id": "data_migration", "type": "noul", "question": "The change alters stored data or a schema."},
+  {"id": "needs_senior", "type": "noul", "question": "A senior engineer must review this before merge."}
+]
+```
+
+## Incident severity (how bad is this and who responds)
+
+```json
+[
+  {"id": "severity", "type": "choice", "question": "Incident severity.", "options": ["sev1", "sev2", "sev3", "not_an_incident"]},
+  {"id": "customer_impact", "type": "score", "question": "How much customer-facing impact is described, 0 none to 1 total outage.", "scale": [0, 1]},
+  {"id": "page_now", "type": "noul", "question": "On-call must be paged now."}
+]
+```
+
+## Personal data (does this text contain personal information)
+
+```json
+[
+  {"id": "personal", "type": "noul", "question": "The text contains a person's name, email, phone number, address or ID number."},
+  {"id": "sensitive", "type": "noul", "question": "The text contains health, financial or credential information."},
+  {"id": "share_ok", "type": "choice", "question": "Can this text be shared with an external service?", "options": ["yes", "no", "redact_first"]}
+]
+```
+
+## Acting on answers (the caller maps answers to actions)
+
+A decision policy returns answers, not actions. The caller maps them with a short table it
+writes for itself, for example: `lane=billing` goes to the billing queue; `human=yes` pages
+a person; `share_ok=redact_first` redacts before sending. Keep the table in the caller's own
+notes and read it from there. Do not let a helper or script choose the action.
