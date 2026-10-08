@@ -96,15 +96,6 @@ p, figcaption { margin: 0 0 14px; max-width: 60ch; }
 .status { font-size: 15px; color: var(--muted); margin: 8px 0 0; }
 .status:empty { margin: 0; height: 0; }
 
-.hero-art { margin: 32px 0 0; }
-.hero-art svg { display: block; width: 100%; max-width: 480px; height: auto; }
-.hero-art .box { fill: var(--card); stroke: var(--accent); stroke-width: 2; }
-.hero-art .box-merge { fill: var(--accent); stroke: var(--accent); stroke-width: 2; }
-.hero-art .label { fill: var(--ink); font-size: 26px; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-.hero-art .label-on { fill: var(--accent-ink); font-size: 26px; font-family: system-ui, -apple-system, "Segoe UI", Roboto, sans-serif; }
-.hero-art .wire { fill: none; stroke: var(--muted); stroke-width: 2; }
-.hero-art .head { fill: var(--muted); }
-.hero-art figcaption { font-size: 15px; color: var(--muted); margin-top: 8px; max-width: 50ch; }
 
 ol.steps { list-style: none; counter-reset: step; padding: 0; margin: 0; }
 ol.steps li {
@@ -126,13 +117,13 @@ ol.steps li p { margin: 0; color: var(--muted); }
 .types p { color: var(--muted); font-size: 16px; }
 pre {
   background: var(--code); border-radius: 8px; padding: 12px; margin: 0;
-  font-size: 14px; line-height: 1.5; white-space: pre; overflow-x: auto;
+  font-size: 13px; line-height: 1.5; white-space: pre; overflow-x: auto;
   max-width: 100%;
 }
 @media (max-width: 480px) {
   body { font-size: 16px; }
   .types article { padding: 14px; }
-  .types pre { font-size: 13px; padding: 10px; }
+  .types pre { padding: 10px; }
 }
 
 ul.policies { list-style: none; padding: 0; margin: 0; }
@@ -141,6 +132,8 @@ ul.policies li {
   max-width: 66ch;
 }
 ul.policies strong { color: var(--ink); }
+ul.speed { margin: 0 0 14px; padding-left: 20px; color: var(--muted); }
+ul.speed li { max-width: 60ch; margin: 0 0 6px; }
 
 
 .cta {
@@ -180,28 +173,6 @@ footer {
   <p>Needs Node.js for <code>npx</code>. jill is one skill in the jill repository. Run it in an agent that has an Agent tool, such as Claude Code, and ask for it, for example: <em>Use jill: which lane should this message go in, and does a person need to see it now?</em></p>
   <p class="small">The agent dispatches the Haiku subagents itself. In Claude Code you can add it as a plugin instead: <code>/plugin marketplace add AnEntrypoint/jill</code>, then <code>/plugin install jill@jill</code>.</p>
 
-  <figure class="hero-art" style="margin-left: 0; margin-right: 0;">
-    <svg viewBox="0 0 540 200" role="img" aria-label="One state is copied into a chunk of eight questions and a chunk of two, which run in parallel and merge back into answers." focusable="false">
-      <defs>
-        <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
-          <path class="head" d="M0,0 L10,5 L0,10 z"/>
-        </marker>
-      </defs>
-      <path class="wire" marker-end="url(#arr)" d="M130,100 C158,100 160,54 190,54"/>
-      <path class="wire" marker-end="url(#arr)" d="M130,100 C158,100 160,146 190,146"/>
-      <path class="wire" marker-end="url(#arr)" d="M350,54 C380,54 380,100 410,100"/>
-      <path class="wire" marker-end="url(#arr)" d="M350,146 C380,146 380,100 410,100"/>
-      <rect class="box" x="0" y="72" width="130" height="56" rx="10"/>
-      <text class="label" x="65" y="110" text-anchor="middle">state</text>
-      <rect class="box" x="190" y="30" width="160" height="48" rx="10"/>
-      <text class="label" x="270" y="63" text-anchor="middle">8 questions</text>
-      <rect class="box" x="190" y="122" width="160" height="48" rx="10"/>
-      <text class="label" x="270" y="155" text-anchor="middle">2 questions</text>
-      <rect class="box-merge" x="410" y="72" width="130" height="56" rx="10"/>
-      <text class="label-on" x="475" y="110" text-anchor="middle">merge</text>
-    </svg>
-    <figcaption>One state (your text and the facts a decision is about), copied into each chunk. Ten questions split into a chunk of eight and a chunk of two, which run in parallel and merge into answers.</figcaption>
-  </figure>
 </section>
 
 <section aria-labelledby="how">
@@ -209,11 +180,11 @@ footer {
   <ol class="steps">
     <li>
       <h3>Prepare chunks</h3>
-      <p>Group the questions that share one state into chunks of up to eight.</p>
+      <p>Group the questions that share one state into chunks of up to eight. The state is copied into each chunk: ten questions make one chunk of eight and one of two.</p>
     </li>
     <li>
       <h3>Dispatch Haiku subagents in parallel</h3>
-      <p>Send one subagent per chunk on the <span class="nb">claude-haiku-5-5</span> model (<code>model: "haiku"</code>), all in one message. Each uses the read-only <code>Explore</code> agent type, which cannot write files, at low effort, and replies with JSON only.</p>
+      <p>Send one subagent per chunk on the <span class="nb">claude-haiku-5-5</span> model (<code class="nb">model: "haiku"</code>), all in one message. Each uses the read-only <code>Explore</code> agent type, which cannot write files, at low effort, and replies with JSON only.</p>
     </li>
     <li>
       <h3>Merge</h3>
@@ -279,20 +250,24 @@ footer {
 </section>
 
 <section aria-labelledby="policies">
-  <h2 id="policies">Eleven ready-made policies</h2>
-  <p>Question sets for common decisions, in <a href="https://github.com/AnEntrypoint/jill/blob/main/skills/jill/references/policies.md">references/policies.md</a>, ready to paste as a question list. To write your own, give each question an id and pick one type: choice, score or noul.</p>
+  <h2 id="policies">Fifteen ready-made question sets</h2>
+  <p>Question sets for common decisions, in <a href="https://github.com/AnEntrypoint/jill/blob/main/skills/jill/references/policies.md">references/policies.md</a>, ready to paste as a question list. The file has fifteen; they are listed here. To write your own, give each question an id and pick one type: choice, score or noul.</p>
   <ul class="policies">
     <li><strong>Model routing</strong>: the cheapest model tier good enough for a turn. Risky work never goes to the cheapest tier.</li>
     <li><strong>Skill selection</strong>: which installed skill a turn needs, or none.</li>
     <li><strong>Triage</strong>: what kind of message it is, how urgent, and whether a person must see it now.</li>
     <li><strong>Mailbox lanes</strong>: which lane a message belongs in, and whether it deserves attention.</li>
-    <li><strong>Memory filter</strong>: which retrieved passages help answer the current question.</li>
+    <li><strong>Memory filter</strong>: which retrieved passages help answer the current question, and which carry instructions aimed at an agent.</li>
     <li><strong>Turn selection</strong>: which turns to keep when a transcript has to be cut.</li>
     <li><strong>Injection screen</strong>: whether web or tool output tries to instruct an agent.</li>
     <li><strong>Command gate</strong>: whether a shell command is safe to run without review.</li>
     <li><strong>Pull request risk</strong>: how risky a change is, and whether a senior engineer must review it.</li>
     <li><strong>Incident severity</strong>: how bad an incident is, and whether on-call must be paged now.</li>
     <li><strong>Personal data</strong>: whether a text holds personal or sensitive information, and whether it can be shared.</li>
+    <li><strong>Search result selection</strong>: which results are worth opening, and which are probably out of date.</li>
+    <li><strong>Evidence sufficiency</strong>: whether the evidence answers the question without more searches, how directly it supports the answer, and whether two pieces contradict each other.</li>
+    <li><strong>Next browser action</strong>: which page action moves the goal forward, and whether it can be undone or sends personal or payment data.</li>
+    <li><strong>Handoff worthiness</strong>: which turns record a decision or a constraint that a later session must keep.</li>
   </ul>
   <h3 style="margin-top: 24px;">Worked example: triage</h3>
   <pre>[
@@ -320,14 +295,19 @@ footer {
     "question": "Needs a person now."
   }
 ]</pre>
-  <p class="small">Reworded from policies.md to fit a phone. The exact triage set is in that file. The caller maps the answers to actions itself.</p>
+  <p class="small">Same ids, types and options as policies.md. Two questions are shortened so each line fits a phone's width; the exact set is in that file. The caller maps the answers to actions itself.</p>
 </section>
 
 <section aria-labelledby="speed">
   <h2 id="speed">Speed</h2>
-  <p>The timings in the <a href="https://github.com/AnEntrypoint/jill#speed">project README</a> are single samples, with about a second of noise, so read them as rough.</p>
-  <p>One 16-question chunk took 8.5 s at default effort, a single sample. The skill keeps each chunk at eight questions or fewer.</p>
-  <p>Identical decisions on the same state are reused within a conversation, so repeats cost no model call. The skill's speed and token notes list the other measurements.</p>
+  <p>Measured on the Agent path, as the <a href="https://github.com/AnEntrypoint/jill#speed">project README</a> records them. Each figure is a single sample, with about one second of noise.</p>
+  <ul class="speed">
+    <li>One 8-question set, <code>Explore</code>, low effort: 3.4 s and 4.1 s, about 16.5k subagent tokens each.</li>
+    <li>The same set at default effort: 8.9 s, with the same tokens.</li>
+    <li>Two 4-question calls in parallel: 2.8 s, but twice the tokens. Against single samples with about a second of noise, that speed gain is not firm.</li>
+    <li>Two uncertain answers escalated to <code>sonnet</code> at low effort: 2.4 s. The README gives no token count or question set for this row.</li>
+  </ul>
+  <p>Identical decisions on the same state are reused within a conversation, so repeats cost no model call.</p>
 </section>
 
 <footer>

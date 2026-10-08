@@ -122,3 +122,50 @@ A decision policy returns answers, not actions. The caller maps them with a shor
 writes for itself, for example: `lane=billing` goes to the billing queue; `human=yes` pages
 a person; `share_ok=redact_first` redacts before sending. Keep the table in the caller's own
 notes and read it from there. Do not let a helper or script choose the action.
+
+## Search result selection (which results are worth opening)
+
+Put the question and one result per line (title, URL, snippet) in the state.
+
+```json
+[
+  {"id": "open", "type": "noul", "question": "This result is likely to contain evidence that answers the question."},
+  {"id": "relevance", "type": "score", "question": "How directly this result addresses the question.", "scale": [0, 1]},
+  {"id": "stale", "type": "noul", "question": "The result is probably out of date for this question."}
+]
+```
+
+## Evidence sufficiency (does what was found answer the question)
+
+Put the question and the collected evidence in the state.
+
+```json
+[
+  {"id": "answered", "type": "noul", "question": "The evidence answers the question without needing more searches."},
+  {"id": "support", "type": "choice", "question": "How directly the evidence supports the answer.", "options": ["direct", "indirect", "none"]},
+  {"id": "conflict", "type": "noul", "question": "Two pieces of evidence contradict each other."}
+]
+```
+
+## Next browser action (which page action comes next)
+
+Put the goal and short labels for the visible elements in the state. Never send page text or field values.
+
+```json
+[
+  {"id": "action", "type": "choice", "question": "Which action moves the goal forward?", "options": ["click_primary", "fill_form", "scroll", "go_back", "stop_and_ask"]},
+  {"id": "reversible", "type": "noul", "question": "The chosen action can be undone without loss."},
+  {"id": "submits_data", "type": "noul", "question": "The chosen action sends personal or payment data."}
+]
+```
+
+## Handoff worthiness (what a new session needs from this one)
+
+Put the summary-worthy turns, one per line, in the state.
+
+```json
+[
+  {"id": "carry", "type": "noul", "question": "This turn records a decision or a constraint a later session must keep."},
+  {"id": "importance", "type": "score", "question": "How much later work depends on this turn.", "scale": [0, 1]}
+]
+```

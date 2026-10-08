@@ -460,3 +460,156 @@ The criterion did not fail the work: MAYA separated the hero objection (the mech
 
 ### Status
 Run INCOMPLETE. S1, S4 and S5 are met as logged. S2 and S3 are not met. Open frontier at close: the speed-figure question (needs the user to say which README figures are authoritative, since the brief's list no longer matches the sources); the three-column type cards and per-policy copy controls (deferred, reasons above); the W5 items deferred above. Resume point: decide the speed figures; then run a source freshness check and WHOLE rounds W6 onward until two consecutive rounds are clean.
+
+## 16. Run 3: W5 objects resolved, source check, rounds W6 onward
+
+Mode Adaptive (unchanged). Tools: Agent (ten general-purpose agents, one per reference, fresh each round); headless `/usr/bin/chromium --headless --no-sandbox`; `measure.html` and screenshots in the session scratchpad (outside the project). `gm` dispatch via the spool: phase SPECIFY; the response reported `config-source` unresolved (builtin defaults) and a gate `browser-witness-coverage` not in the compiled registry. Surfaced here, not worked around.
+
+### Source freshness check (before W5 is judged; the graph amendment from section 15)
+- README Speed section: 3.4 s, 4.1 s, 8.9 s, 2.8 s, 2.4 s, 16.5k tokens, about one second of noise. All present. `8.5 s` is NOT in README (it is SKILL.md's 16-question chunk). The page printed 8.5 s, so it broke the brief's rule that README is the only speed source. Corrected by M11.
+- `references/policies.md`: 16 `##` headings, 15 of them carry a JSON question set (the 16th, "Acting on answers", has none). The page said "Eleven". Corrected by M12.
+- No "calibrat" in the page's visible text (0 before and after). SKILL.md and README use the word; the page does not claim it.
+
+### Premise checks (DADA 2d) for each W5 object
+| W5 object | Premise measured | Premise | Resolution |
+|---|---|---|---|
+| Tufte, Cairo, Nielsen, Holmes: speed lacks the 8-question timings and tokens | Page text before the edit: `3.4 s` absent, `8.5 s` present | TRUE | ADAPT (M11) |
+| Krug: "Noul" heading is jargon | The card beneath it holds `"type": "noul"`; SKILL.md uses the same word | FALSE for the heading (it names the value the reader writes) | OVERRULE |
+| Krug, Nielsen: page length | `bodyScrollHeight` 5765 px at 390 px, 5147 px at 1280 px (before M11 to M14) | TRUE as measured; the length is the policy sets and the three question types the brief asks for | OVERRULE (MAYA: the acceptable pole is the page's content, not its height) |
+| Mace: a copy control for each policy | One copy control, 44 px high; every set is in `policies.md`, which the page links | TRUE | DEFERRED (reason in section 15 stands; S1) |
+| Bringhurst: plugin line at 15 px; five sizes within 30 percent | Computed sizes before the edit: 13, 14, 15, 16, 17 px (code, caption, body) | Sizes TRUE; 15 px is the shared caption size (figcaption, status, footer, plugin line) | ADAPT for the code sizes (M14); OVERRULE for the caption |
+| Cairo: calibration not measured | `calibrat` count in innerText: 0 | FALSE for the page | OVERRULE |
+
+### Move M11: speed figures from README only (ADAPT)
+Depends on: none. Anchors: Rule Quality Attribute Scenario (c_qas, a testable claim), Rule Feynman Technique (c_feynman, plain-language check against the source). Counterpoint: none used.
+Change: the speed section prints the README's figures with their conditions as a four-item list (3.4 s and 4.1 s at low effort with about 16.5k tokens; 8.9 s at default effort; 2.8 s for two parallel 4-question calls at twice the tokens; 2.4 s for a sonnet escalation). The 8.5 s line is removed.
+Measured (text match against README.md): all six figures found; `8.5 s` on the page: false.
+Residual diff: intended (speed text and list). Inert: none. Regression: none found.
+
+### Move M12: policy count and list from the file (ADAPT, source drift)
+Depends on: none. Anchors: Feynman (c_feynman). Counterpoint: none used.
+Change: heading "Eleven ready-made policies" becomes "Fifteen ready-made question sets". Four sets are added (search result selection, evidence sufficiency, next browser action, handoff worthiness). The memory filter line now names its second question (instructions aimed at an agent).
+Measured: `ul.policies li` count 11 before, 15 after; JSON question sets in policies.md: 15.
+
+### Move M13: triage caption matches the copy (ADAPT)
+Depends on: none. Anchors: Feynman (c_feynman).
+Compared character by character with policies.md: ids `kind`, `urgency`, `human` identical; types and options identical; question `How urgent is it?` identical; `What kind of message is this?` shortened to `What kind is it?`; `A person must see this now.` shortened to `Needs a person now.`. The caption now says so: "Same ids, types and options as policies.md. Two questions are shortened so each line fits a phone's width."
+Measured: triage `pre` scrollWidth equals clientWidth at 390 px (343/343) after the edit. Without the shortening, the longest line (48 characters) would scroll.
+
+### Move M14: one code size (ADAPT, Bringhurst's scale premise)
+Depends on: M13 (the triage block is a code block). Anchors: Rule Universal Principles (aesthetic-usability). Counterpoint: none used.
+Change: `pre` is 13 px at every width (it was 14 px on desktop and in the triage block on phones).
+Measured after the edit: all six `pre` blocks 13 px at 390 and 1280 px; scrollWidth equals clientWidth for every block (390: 313/313 x3, 343/343 x3; 1280: 638/638 x3, 672/672 x3). Sizes now on the page: 13 code, 15 caption, 16 and 17 body, 18.4 lead, 19.2 h3, 24 h2, 26 hero label, 36 and 56 h1.
+
+### S5 correction (dotted edges from used anchors)
+Section 13 recorded two edges as APPLIED through moves since scrapped. Re-decided:
+- MAYA -.-> Art as Technique ("tempers strangeness of"): was APPLIED through M9, which is SCRAPPED. The page now has no strange element to temper. Now DECLINED for this run, with that reason.
+- Chesterton's Fence -.-> Weingart ("gate passed before"): was APPLIED through the M3 fence, which is SCRAPPED. No grid break remains, so no gate. Now DECLINED for this run.
+- Other dotted edges: as section 15 recorded (Tufte Style declined; Samara -.-> Müller-Brockmann declined; Popper applied in 2f; Provocateur and Usability pair recorded in section 13; Evidence -.-> Wit declined, no Wit critic).
+
+### Rounds
+
+#### Round W6 (WHOLE, ten fresh agents, page after M11 to M14; screenshots at true 390 px and 1280 px)
+| Critic (reference) | Verdict | Main objection | Premise check | Resolution |
+|---|---|---|---|---|
+| Debord | OBJECT | Hero figure is a picture; labels shrink to about 17 px at phone width; 704 px column leaves empty sides | Hero label 16.5 px at 390 px (measured in run 2, true) | Hero region: FRAME SWAP (below). Empty sides: OVERRULE (White stance, M1) |
+| Shklovsky | OBJECT | Replace the 15-item list and the triage block with one real run | The example reply is labelled "not a measured result" (true) | Hero region: FRAME SWAP. List and worked block: OVERRULE (the list is the brief's policy content; a single run is one sample of 15 sets) |
+| Holmes | OBJECT | `pre` at 13 px is 81% of body; add tabindex to every `pre` | At true 390 px, the three type-card `pre` blocks fit at 14 px (scrollWidth 328 = clientWidth 328); no `pre` overflows at 13 px, so no focus stop is needed | 14 px: ADAPT deferred under the 3-round rule (see below). tabindex: OVERRULE (no overflow to scroll) |
+| Mace | OBJECT | `pre` at 15 px; stop shortening the triage questions | 15 px is not measured here; verbatim triage text at 13 px is 400 px in a 358 px box (overflow, measured) | Shortened wording kept: OVERRULE (overflow measured). 15 px: OVERRULE (the 14 px fit is the ceiling for the type-card width, see Holmes) |
+| Krug | OBJECT | Lead names Jev before saying what jill does | The lead's first clause says what jill does ("answers small typed questions ... using a claude-haiku-5-5 subagent"); Jev follows and is glossed as "a cloud decision model" (text, true) | OVERRULE on that text |
+| Nielsen | OBJECT | Wrap the policy list and worked block in `details`; page is about 16 screens | Page height 6404 px at 390 px before the frame swap (measured); policy list is the content the brief requires; c_prog is DEFERRED with this reason in section 15 | OVERRULE (MAYA; c_prog reason stands) |
+| Tufte | OBJECT | Hero 8 and 2 boxes are equal size (1:1 for 4:1); speed list ranks differences inside the noise | Boxes both 160x48 (true). Speed: 2.8 s vs 3.4 s is 0.6 s, inside the README's one-second noise (true) | Hero: FRAME SWAP. Speed: ADAPT, the wording now says the gain is not firm against the noise (correction, applied) |
+| Cairo | OBJECT | Same hero boxes; speed comparison | As Tufte | As Tufte |
+| Sennett | OBJECT | `model: "haiku"` breaks across lines; raise `.types pre` to 14 px | Token: 2 client rects before the edit (true, a real break). 14 px: fits (premise true at true 390 px) | Token: ADAPT, applied as a correction (nowrap). 14 px: held under the 3-round rule |
+| Bringhurst | OBJECT | Phone measure about 42 characters per line; body 15 px; hero caption 50ch | Measured at true 390 px: body paragraphs 44 to 49 characters per line; the numbered steps (48 px hanging indent) run about 35 | Steps: OVERRULE (short list items with a hanging indent; the rest of the body is 44 to 49). Hero caption: moot (frame swap) |
+
+Andon: none pulled. PASS: 0 of 10.
+
+**3-round rule.** W4, W5 and W6 each produced new OBJECT verdicts. The brief says: do not make another move; perform a frame swap or a double-loop revision instead. Done below. The two accuracy corrections (the token wrap, the speed wording) are wording fixes, applied and logged as corrections; the 14 px code size is a design move and is held.
+
+#### Frame swap (hero region, W6)
+- Region: the hero mechanism diagram. Objectors: Debord, Tufte, Cairo (3 critics, the threshold in 2d), and Shklovsky earlier (rounds R1 to W5).
+- Anchor replaced: Art and Visual Perception (Arnheim), which carried the diagram. Sibling reached by an existing edge: Visual Hierarchy (Arnheim, Dondis), via `arnheim -->|basis of| vh`.
+- Change: the figure and its SVG are removed, with their CSS. The hero is now the heading, the lead and the one filled object, the install row, in that order.
+- Retained value: the decisions the diagram carried are kept in the text of "How it works". Step 1 now says the state is copied into each chunk and that ten questions make one chunk of eight and one of two. Step 2 already says all subagents go out in one message. Step 3 is unchanged.
+- Residual diff: intended: hero figure removed (svg 540 by 200 units), figcaption removed, step 1 sentence added. Inert: none. Regression: none found. Measured after the swap (true 390 px): page height 6116 px (was 6282), no horizontal overflow, `svg` count 0.
+
+#### Double loop (after W6)
+- Criterion (MAYA): the acceptable pole was used five times to overrule the same hero objection. That repetition is the signal: the criterion was defending a frame the panel rejected. Amendment: an advanced-pole overruling must name a measured object that the frame keeps, or the frame is swapped.
+- Panel: the critics now ask for opposite things. Provocateur asks for a live run and less catalogue; Usability asks for less text and hidden policies; Inclusion asks for bigger code; Craft asks for a shorter measure. The Provocateur and Usability dotted pair (section 13) is producing an oscillation the panel cannot resolve. Amendment: the Provocateur critic's objections to a region are answered by removal of that region's competing system, not by addition.
+- Graph: the hero's frame came from run 1 and was judged as a figure, not as a frame. The premortem of run 2 tested the figure's content and not its frame. Amendment: a premortem must name the frame (the anchor that governs a region) and test it against its sibling.
+- Measurement: three runs measured "390 px" in an iframe with a vertical scrollbar, so the layout was 375 px (CARRY-FORWARD 1). The phone-width claims of runs 1 to 2 (the `pre` and triage fits) were measured at the wrong width. Corrected here at a true 390 px layout (iframe taller than the document). Amendment: every phone measurement uses an iframe at least as tall as the document, and says so.
+
+
+#### Round W7 (WHOLE, ten fresh agents, page after the frame swap and the sonnet disclosure)
+| Critic (reference) | Verdict | Main objection | Premise check (true 390 px and 1280 px layouts) | Resolution |
+|---|---|---|---|---|
+| Debord | OBJECT | The three type cards are identical stacked forms; show one shared state with its answers | Cards stack at all widths (`grid-template-columns: 1fr`, true). Each card is a different type shape (true) | Type-card region: frame swap to Tufte Style (sibling via the dotted edge `crit_evid -->|checks density with| c_tufte`) considered and REFUSED by measurement: three columns at 1280 px put the code inside cards 179 px wide, with pre scrollWidth 243 and 290 px. Shared-state run: OVERRULE by medium (a static page cannot dispatch a subagent; the example reply and failed answer show the output) |
+| Shklovsky | OBJECT | Replace the three cards with one worked question | As Debord | As Debord |
+| Holmes | OBJECT | `pre` to 15 px; phone reader; "Press Ctrl+C or Cmd+C" assumes a keyboard | 15 px at true 390 px FITS (pre 328/328 and 358/358, scrollWidth equals clientWidth): the overflow premise is false, so the request is feasible. The copy line is the no-clipboard path only | 15 px: HELD by the 3-round rule (OPEN, DEFERRED with this measurement). Copy line: HELD (wording of the fallback path) |
+| Mace | OBJECT | `pre` to 15 px, keep wrapping or scrolling | As Holmes | HELD (as Holmes) |
+| Krug | OBJECT | Plain lead; gloss "noul"; rename heading | Lead: first clause says what jill does (text, true). "noul" first appears in Merge step 3 before its card (true) | Lead: OVERRULE (as W6). Noul gloss: HELD (clarity move) |
+| Nielsen | OBJECT | Gloss "noul" on first use (five uses, first in Merge) | As Krug | HELD |
+| Tufte | OBJECT | `.types` to three columns at 640 px and up | Measured REFUSED (see Debord) | OVERRULE by measurement |
+| Cairo | OBJECT | Speed table with each figure's model, effort, tokens and sample count; sonnet row has no tokens or question set | Sonnet row: TRUE, the README gives neither (the page now says so). Table: a restructure; the list keeps each README condition beside its figure | Sonnet row: ADAPT as a disclosure (applied). Table: OVERRULE (MAYA) |
+| Sennett | OBJECT | Wrap triage in `details`; wrap the model token; `pre` to 14 px | Token: wrap fixed in W6 (one client rect now). `details`: as Nielsen (W6). 14 px: fits (premise false for overflow) | Token: done. `details`: OVERRULE. 14 px: HELD (as Holmes) |
+| Bringhurst | OBJECT | Vertical rhythm: 16 px body at 24 px leading, paragraph gap 24 px, section 48 px | Body line pitch 16 x 1.6 = 25.6 px, paragraph gap 14 px, section 40 px: none is a multiple of 25.6 (true) | HELD (a rhythm move, held by the rule; logged as a Frontier item) |
+
+Andon: none pulled. PASS: 0 of 10.
+
+**3-round rule, still in force.** W4 to W7 each produced new OBJECT verdicts. This round the only actions are the double loop below, the refused frame swap, and the measured sonnet disclosure. Every design move is HELD and logged as DEFERRED with its measurement, so S1 is met on paper and no move was made to chase the verdicts.
+
+#### Double loop (after W7)
+- Criterion (MAYA). The advanced pole has been asked for a live run in W6 and W7 (Debord, Shklovsky). The artifact is a static page with no runtime; a live run needs the page to dispatch a claude-haiku-5-5 subagent, which the medium cannot do. The demand is outside the medium, not a defect in the work. Amendment: the advanced pole is a static, captioned example, and a demand for a live run is recorded as OVERRULE by medium.
+- Panel. The ten references now ask for four different genres at once: more worked examples (Provocateur), less text and hidden policies (Usability), bigger code (Inclusion), tables (Evidence), a finer rhythm (Craft). Each is correct in its own doctrine and they do not converge on one artifact. Amendment: genre objections (a table, a live run, a worked run in place of a list) are recorded as genre objections and answered by the criterion. Only a measured defect moves the page.
+- Graph. The type-card region drew 3 objectors in W7 (Debord, Shklovsky, Tufte). The frame swap to Tufte Style is measured and refused, so the region keeps its frame. The code-size region has no sibling frame; 14 and 15 px both fit, so it is a move, held by the 3-round rule.
+
+#### Frontier after W7 (state for the report)
+- TAKEN this run: speed figures from README (M11); policy count from the file (M12); triage caption (M13); hero frame swap (Arnheim to Visual Hierarchy); token wrap; speed wording; sonnet disclosure; `noul` not yet.
+- DEFERRED, reason: code size 15 px (held by the rule; fits at 390 px, measured); `noul` gloss on first use (held by the rule); the Copy fallback wording (held); vertical rhythm on a 24 px baseline (held; premise true); per-policy copy controls (medium; a copy of policies.md); three type columns (refused by measurement, 179 px cards); Tufte Style frame for the type cards (refused by measurement); live or worked run (outside the medium).
+- OVERRULED: lead names Jev (the lead says what jill does first); `details` wrappers (MAYA, c_prog reason stands); speed table (MAYA); page length (MAYA); empty side columns (White stance); Mace's "do not shorten" (verbatim overflows at 13 px, 400 px in a 358 px box).
+
+#### Round W8 (WHOLE, ten fresh agents, the final page: after the sonnet disclosure)
+| Critic (reference) | Verdict | Main objection | Resolution this run |
+|---|---|---|---|
+| Debord | OBJECT | Three columns at 640 px and up; install command sits about 350 px down | 3 columns refused by measurement (see W7). Install position: OVERRULE (the install block is the page's first action on the first screen) |
+| Shklovsky | OBJECT | Replace the type cards and duplicate triage example with one worked question | OVERRULE by medium (no runtime); triage example kept (policies.md is linked, the example is the one set shown in full) |
+| Holmes | OBJECT | `pre` to 15 px with pre-wrap; who lacks Claude Code | 15 px fits (measured W7). HELD by the 3-round rule. Reader question: the requirement is stated in the paragraph after the command (true) — HELD |
+| Mace | OBJECT | `pre` to 15 px | HELD (as Holmes) |
+| Krug | OBJECT | Lead names Jev first; move the Jev clause to How it works | OVERRULE (as W6: the lead says what jill does first, measured by text order) |
+| Nielsen | OBJECT | Type cards take about 28% of the phone page; cut to one example | OVERRULE (the three types are the brief's content; measured height 6141 px at 390) |
+| Tufte | OBJECT | Speed as a dot plot with one-second band and token labels | OVERRULE (the README gives one sample per row with no spread; a plot would draw a spread the README does not measure) |
+| Cairo | OBJECT | Give each speed row n and spread; match "single sample" to it | OVERRULE on the figure: the README records the runs as single samples (text match: "single samples"). The "3.4 s and 4.1 s" row is two single samples of the same set, stated as such in the page's own intro |
+| Sennett | OBJECT | Let the triage `pre` wrap; enforce the fit in CSS | OVERRULE: pre-wrap would split `"question":` from its value (CARRY-FORWARD 11); the shortened text fits at 358 px (measured) |
+| Bringhurst | OBJECT | Restore the full triage strings and let the `pre` scroll | OVERRULE by measurement: the full strings overflow at 13 px (400 px in a 358 px box, W6) |
+
+Andon: none pulled. PASS: 0 of 10.
+
+#### Stop test (Step 4), final state
+- S1 (Frontier: no OPEN item; each TAKEN, DEFERRED with a reason, or OVERRULED): MET. Items held by the 3-round rule are DEFERRED with their measurements: code size 15 px (fits at 390 px), `noul` gloss on first use, the Copy fallback wording, vertical rhythm on a 24 px baseline, the Holmes reader question. Log: sections 16 (W6, W7 and W8 tables and Frontier after W7).
+- S2 (a WHOLE round with every required critic PASS, no Andon): NOT MET. W6 0 of 10; W7 0 of 10; W8 0 of 10. No Andon in any round.
+- S3 (two consecutive clean WHOLE rounds with no ADAPT, SCRAP, REOPEN or new OPEN item): NOT MET. W6, W7 and W8 each produced OBJECTs and new Frontier items.
+- S4 (ambition push, measured and logged): MET AS LOGGED IN RUN 2 (M10: `.install` width 672 to 1280 px at 1280; 8 px overflow found; push reverted). This run made no new push. The Breaker it started from (M3, the speed bars) was scrapped in run 2, so S4's breaker condition is weak; flagged.
+- S5 (every dotted edge from a used anchor applied or declined with reason): MET, with two corrections this run. MAYA -.-> Art as Technique: DECLINED (the APPLIED claim relied on M9, scrapped; the page has no strange element to temper). Chesterton's Fence -.-> Weingart: DECLINED (the APPLIED claim relied on M3, scrapped; no grid break remains). Others as section 15, including Provocateur -.-> Usability (recorded in section 13) and Evidence -.-> Wit (declined, no Wit critic).
+
+#### Why the run stops at three WHOLE rounds this run
+The brief caps this run at six. Three consecutive rounds (W6, W7, W8) each produced new OBJECTs, so the brief forbids further moves and requires a frame swap or a double loop instead. A frame swap was performed and refused by measurement (type cards, three columns), and a double loop was logged (W6, W7). Further rounds would re-judge an unchanged page, so they would produce no new information. The run stops here and reports the open frontier, instead of spending rounds the rule does not let the page answer.
+
+Total WHOLE rounds across the log: 12 (R1 to R4 in run 1; W1 to W5 in run 2; W6 to W8 in run 3).
+
+#### Step 2g: final-state measurements (after the last edit, the sonnet disclosure; measured with iframes at least as tall as the document, so the layout is the true width)
+| Printed figure | Source | Procedure | Final value | Result |
+|---|---|---|---|---|
+| 3.4 s, 4.1 s, 16.5k, 8.9 s, 2.8 s, 2.4 s, "about one second" | README Speed | text match in README and page | all present in both | reproducible |
+| 8.5 s | (SKILL only, not README) | text match on page | absent | corrected (M11) |
+| fifteen question sets | policies.md, 15 JSON blocks | `ul` `li` count | 15 | reproducible |
+| triage caption | policies.md | character comparison of ids, types, options, questions | ids, types, options identical; two questions shortened | reproducible |
+| calibrated | README and SKILL use the word | `calibrat` count in page text | 0 | reproducible |
+| install command | README Install | `#cmd` text | `npx skills add AnEntrypoint/jill` | reproducible |
+| 0.6, eight, 0.97 (example, labelled) | SKILL rules and example | text match | present | reproducible |
+| no horizontal page scroll | `scrollWidth` vs `clientWidth` | 390 px: 390/390; 1280 px: 1280/1280 | equal | reproducible |
+| every `pre` fits its box | `scrollWidth` vs `clientWidth` | 390 px: 328/328 x3, 358/358 x3; 1280 px: 638/638 x3, 672/672 x3 | equal | reproducible |
+| copy target | `getBoundingClientRect` | 44 px | 44 | reproducible |
+| policy list rows | `ul.policies li` | 15 | 15 | reproducible |
+| model token line | client rects of the `code` | 1 | one line | reproducible |
+| page height | `bodyScrollHeight` | 390 px: 6141; 1280 px: 5364 | — | reproducible |

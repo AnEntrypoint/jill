@@ -58,6 +58,9 @@ Measured on the Agent path, single samples with about one second of noise:
 - Two 4-question calls in parallel are a little faster (2.8 s) but cost twice the tokens.
 - `statusline-setup` halves the tokens (8.6k) but has an Edit tool, so it is not the default.
 - Escalating two uncertain answers to `sonnet` at low effort: 2.4 s.
+- `Plan` and `Explore` cost the same (4.3 s and 16.7k tokens).
+- Two frontiers. Speed mode, the default: parallel 8-question calls, about 3.4 to 4.1 s and about
+  33k tokens for 16 questions. Token mode: one 16-question call, 6.5 s and 17.6k tokens.
 
 Identical decisions on the same state are reused within a conversation, so repeats cost no model call.
 

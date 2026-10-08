@@ -109,6 +109,11 @@ Single samples unless stated. Timing noise is about plus or minus one second.
   is not the default (see the untrusted-text rule above).
 - Escalation: two uncertain questions re-asked on `sonnet` at low effort took 2.4 s and 15.6k
   tokens. The tier answer moved from medium at 0.5 to large at 0.8.
+- `Plan` and `Explore` cost the same: 4.3 s and 16.7k tokens against 3.4 to 4.1 s and 16.5k for
+  `Explore`. Keep `Explore`.
+- Two frontiers, both measured. Speed mode (default): parallel 8-question calls, about 3.4 to 4.1 s
+  and about 33k tokens for 16 questions. Token mode: one 16-question call, 6.5 s and 17.6k tokens.
+  Use token mode when the wall clock does not matter and the question count is 9 to 16.
 - A `general-purpose` subagent with a 4-question chunk costs about 29.7k tokens at default effort
   and 29.5k at low effort. Avoid it for decisions.
 - Each subagent carries a fixed context, and the gm opener is part of every Agent dispatch the
