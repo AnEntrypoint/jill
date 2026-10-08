@@ -45,13 +45,14 @@
   color-scheme: dark;
 }
 
+/* Grid: one 24 px baseline. Text sizes are rem so they follow the reader's default text size; line boxes, margins and paddings are multiples of 24 px. Borders are drawn with inset box-shadow so they add no height. */
 * { box-sizing: border-box; }
 html { -webkit-text-size-adjust: 100%; }
 body {
   margin: 0;
   background: var(--bg);
   color: var(--ink);
-  font: 16px/24px system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  font: 1rem/1.5rem system-ui, -apple-system, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
   overflow-x: hidden;
 }
 .wrap { max-width: 44rem; margin: 0 auto; padding: 0 16px; }
@@ -61,51 +62,53 @@ code, pre { font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, "Liberat
 /* 44 px hit area for inline text links; padding and negative margin change no line box */
 p a { padding: 11px 0; margin: -11px 0; }
 footer a { padding: 12px 0; margin: -12px 0; }
+footer .jump { margin: 0 0 24px; }
+footer .jump a { margin: 0; padding: 0 12px; }
 
 header.top {
   display: flex; justify-content: space-between; align-items: center;
-  padding: 16px 0; border-bottom: 1px solid var(--line);
+  padding: 14px 0; box-shadow: 0 1px 0 var(--line);
 }
-header.top .brand { font-weight: 700; color: var(--ink); text-decoration: none; padding: 10px 0; margin: -10px 0; }
-header.top a.gh { font-size: 15px; min-height: 44px; display: inline-flex; align-items: center; }
+/* 13 px side padding, cancelled by the negative side margin: the hit area is 45.53 px wide and the word does not move */
+header.top .brand { font-weight: 700; color: var(--ink); text-decoration: none; padding: 10px 13px; margin: -10px -13px; }
+header.top a.gh { font-size: 0.9375rem; min-height: 44px; display: inline-flex; align-items: center; }
 
 section { padding: 48px 0 0; }
 h1 {
   font-size: clamp(2.25rem, 9vw, 3.5rem);
-  line-height: 1.05; letter-spacing: -0.02em; margin: 40px 0 16px;
+  line-height: 48px; letter-spacing: -0.02em; margin: 24px 0 24px;
 }
-h2 { font-size: 1.5rem; line-height: 1.25; margin: 0 0 12px; }
-h3 { font-size: 1.2rem; line-height: 1.3; margin: 0 0 4px; }
-p, figcaption { margin: 0 0 12px; max-width: 56ch; text-wrap: pretty; }
+h2 { font-size: 1.5rem; line-height: 24px; margin: 0 0 24px; }
+h3 { font-size: 1.2rem; line-height: 24px; margin: 0; }
+p, figcaption { margin: 0 0 24px; max-width: 56ch; text-wrap: pretty; overflow-wrap: break-word; }
 h1, h2, h3, .speed-table caption { text-wrap: balance; }
-.kicker { color: var(--warm); font-weight: 600; font-size: 15px; margin: 0; }
-.lead { font-size: 1.2rem; color: var(--muted); margin: 0 0 28px; text-wrap: pretty; }
-.small { font-size: 15px; color: var(--muted); margin-top: 12px; }
+.kicker { color: var(--warm); font-weight: 600; font-size: 0.9375rem; margin: 0; }
+.lead { font-size: 1.2rem; color: var(--muted); margin: 0 0 24px; text-wrap: balance; }
+.small { font-size: 0.9375rem; color: var(--muted); }
 .small code { overflow-wrap: anywhere; }
 
 .install {
-  display: flex; flex-wrap: wrap; gap: 8px; align-items: center;
-  background: var(--card); border: 1px solid var(--line); border-radius: 12px;
-  padding: 12px; margin-bottom: 16px;
+  display: flex; flex-wrap: wrap; gap: 0 8px; align-items: center;
+  background: var(--card); box-shadow: inset 0 0 0 1px var(--line); border-radius: 12px;
+  padding: 12px; margin: 0;
 }
 .install code {
-  flex: 1 1 200px; min-width: 0; font-size: 15px; overflow-wrap: anywhere;
+  flex: 1 1 200px; min-width: 0; font-size: 0.9375rem; overflow-wrap: anywhere;
   color: var(--ink);
 }
 .copy {
   background: var(--accent); color: var(--accent-ink); border: 0; border-radius: 8px;
-  padding: 0 16px; min-height: 44px; font: inherit; font-weight: 600; cursor: pointer;
+  padding: 0 16px; min-height: 48px; font: inherit; font-weight: 600; cursor: pointer;
 }
 .copy:focus-visible, a:focus-visible { outline: 3px solid var(--warm); outline-offset: 2px; }
-/* one line of status, reserved at rest; the install card sits 4 px above it, so the prompt label is 28 px below the card */
-.install-cmd { margin-bottom: 4px; }
-.status { font-size: 15px; line-height: 24px; color: var(--muted); margin: 0; min-height: 24px; }
-.label { font-size: 15px; color: var(--muted); margin: 0 0 6px; }
+/* the status line is one 24 px line reserved at rest, so the card-to-label gap does not move when a message appears */
+.install-cmd { margin-bottom: 0; }
+.status { font-size: 0.9375rem; line-height: 24px; color: var(--muted); margin: 0; min-height: 24px; }
+.label { font-size: 0.9375rem; color: var(--muted); margin: 0; }
 .sr-only {
   position: absolute; width: 1px; height: 1px; overflow: hidden;
   clip: rect(0 0 0 0); white-space: nowrap;
 }
-
 
 ol.steps { list-style: none; counter-reset: step; padding: 0; margin: 0; }
 ol.steps > li {
@@ -118,24 +121,23 @@ ol.steps > li::before {
   display: grid; place-items: center; font-weight: 700;
 }
 ol.steps li p { margin: 0; color: var(--muted); }
+/* an inline code run in a 24 px line must not add its own line-box height; the install command is a flex item and keeps its 24 px line */
+code { line-height: 1; }
+.install code { line-height: 24px; }
 ul.checks { margin: 0; padding-left: 20px; color: var(--muted); max-width: 34rem; }
 ul.checks li { margin: 0 0 6px; text-wrap: pretty; }
-.checks-head { margin: 32px 0 8px; }
+.checks-head { margin: 24px 0 0; }
 
-.types { display: grid; gap: 16px; grid-template-columns: 1fr; }
+.types { display: grid; gap: 24px; grid-template-columns: 1fr; }
 .types article {
-  background: var(--card); border: 1px solid var(--line); border-radius: 12px; padding: 16px;
-  min-width: 0;
+  background: var(--card); box-shadow: inset 0 0 0 1px var(--line); border-radius: 12px;
+  padding: 24px 12px; min-width: 0;
 }
-.types p { color: var(--muted); font-size: 16px; }
+.types p { color: var(--muted); font-size: 1rem; }
 pre {
   background: var(--code); border-radius: 8px; padding: 12px; margin: 0;
-  font-size: 15px; line-height: 24px; white-space: pre; overflow-x: auto;
+  font-size: 0.9375rem; line-height: 24px; white-space: pre; overflow-x: auto;
   max-width: 100%;
-}
-@media (max-width: 480px) {
-  .types article { padding: 14px; }
-  .types pre { padding: 10px; }
 }
 /* below 360 px the JSON wraps instead of scrolling sideways; declared after the base pre rule */
 @media (max-width: 360px) {
@@ -144,52 +146,53 @@ pre {
 
 ul.policies { list-style: none; padding: 0; margin: 0; }
 ul.policies li {
-  padding: 10px 0; border-bottom: 1px solid var(--line); color: var(--muted);
+  padding: 12px 0; box-shadow: inset 0 -1px 0 var(--line); color: var(--muted);
   max-width: 58ch; text-wrap: pretty;
 }
 ul.policies strong { color: var(--ink); }
 
-.speed-fig { margin: 8px 0 28px; }
-/* labels and tick numerals are HTML text at 15 px; the svg holds only bars, bands and the axis, so it can scale without shrinking any text */
+/* the chart: bars and axis in the svg, labels and tick numerals as HTML text at 15 px so they never shrink with the svg */
+.speed-fig { margin: 0; }
 .speed-chart { position: relative; max-width: 343px; }
 .speed-bars { display: block; width: 100%; height: auto; overflow: visible; }
 .speed-bars .bar { fill: var(--accent); }
-.speed-bars .band { fill: var(--warm); }
-/* each band sits under its bar as a 2 s range centred on the value, so both sides read at equal width */
+.speed-bars .tick, .speed-bars .span { fill: var(--ink); }
+/* a label that ends at its mark (right-aligned to a bar end) */
+.chart-txt.end { transform: translateX(-100%); }
 .speed-bars .axis { stroke: var(--muted); stroke-width: 1; fill: none; }
 .chart-txt {
-  position: absolute; left: calc(var(--x) / 343 * 100%); top: calc(var(--y) / 176 * 100%);
+  position: absolute; left: calc(var(--x) / 343 * 100%); top: calc(var(--y) / 144 * 100%);
   font-size: 15px; line-height: 18px; color: var(--ink); white-space: nowrap;
 }
 .speed-ticks {
-  position: relative; height: 20px; max-width: 343px; margin-top: 2px;
-  font-size: 15px; line-height: 20px; color: var(--muted);
+  position: relative; height: 24px; max-width: 343px;
+  font-size: 0.9375rem; line-height: 24px; color: var(--muted);
 }
 .speed-ticks span { position: absolute; top: 0; left: calc(var(--x) / 343 * 100%); transform: translateX(-50%); white-space: nowrap; }
 .speed-ticks .t-first { transform: none; }
 .speed-ticks .t-last { transform: translateX(-100%); }
-.speed-table { width: 100%; border-collapse: collapse; font-size: 15px; line-height: 22px; margin: 0 0 12px; }
-.speed-table caption { caption-side: top; text-align: left; color: var(--muted); padding: 0 0 8px; }
+.speed-table { width: 100%; border-collapse: collapse; font-size: 0.9375rem; line-height: 1.5rem; margin: 0 0 12px; }
+.speed-table caption { caption-side: top; text-align: left; color: var(--muted); padding: 0 0 12px; }
 .speed-table th, .speed-table td {
-  text-align: left; vertical-align: top; padding: 8px 12px 8px 0; border-bottom: 1px solid var(--line);
+  text-align: left; vertical-align: top; padding: 12px 12px 12px 0;
+  box-shadow: inset 0 -1px 0 var(--line);
 }
 .speed-table thead th { color: var(--ink); font-weight: 600; }
 .speed-table tbody th { font-weight: 400; color: var(--muted); }
 .speed-table td { color: var(--muted); }
-.speed-table .time, .speed-table thead th.time { text-align: right; font-variant-numeric: tabular-nums; white-space: nowrap; }
+.speed-table .time, .speed-table thead th.time { text-align: right; font-variant-numeric: tabular-nums; }
 .speed-table td:last-child, .speed-table thead th:last-child { padding-right: 0; }
-
 
 pre:focus-visible { outline: 3px solid var(--warm); outline-offset: 2px; }
 pre.err { border-left: 3px solid var(--warm); }
 .types + p { margin-top: 24px; }
-.answer { margin: 0 0 12px; padding: 2px 0 2px 16px; border-left: 3px solid var(--accent); max-width: 56ch; }
+.answer { margin: 0 0 24px; padding: 0 0 0 16px; border-left: 3px solid var(--accent); max-width: 56ch; }
 .jump {
-  display: flex; flex-wrap: wrap; gap: 8px; margin: 0 0 16px;
+  display: flex; flex-wrap: wrap; gap: 0 8px; margin: 24px 0 0;
 }
 .jump a {
-  display: inline-flex; align-items: center; min-height: 44px; padding: 0 12px;
-  border: 1px solid var(--line); border-radius: 8px; font-size: 15px; text-decoration: none;
+  display: inline-flex; align-items: center; min-height: 48px; padding: 0 12px;
+  border: 1px solid var(--line); border-radius: 8px; font-size: 0.9375rem; text-decoration: none;
 }
 .cta {
   display: inline-block; margin-top: 8px; padding: 12px 20px; border-radius: 10px;
@@ -197,13 +200,27 @@ pre.err { border-left: 3px solid var(--warm); }
 }
 
 footer {
-  margin-top: 48px; padding: 24px 0 40px; border-top: 1px solid var(--line);
-  color: var(--muted); font-size: 15px;
+  margin-top: 48px; padding: 24px 0 40px; box-shadow: inset 0 1px 0 var(--line);
+  color: var(--muted); font-size: 0.9375rem;
 }
 
+/* 640 px and up: the range cell stays on one line, so "about 3.4 to 4.1 s" is never split from its qualifier */
+@media (min-width: 640px) {
+  .speed-table td.range { white-space: nowrap; }
+}
+/* below 640 px each row is a stacked block; every cell names its column (data-label), and the header row is kept for screen readers only, so no column is clipped at a large text size */
+@media (max-width: 639px) {
+  .speed-table, .speed-table tbody, .speed-table tr, .speed-table th, .speed-table td { display: block; width: auto; }
+  .speed-table thead { position: absolute; width: 1px; height: 1px; overflow: hidden; clip: rect(0 0 0 0); white-space: nowrap; }
+  .speed-table tr { padding: 12px 0; box-shadow: inset 0 -1px 0 var(--line); }
+  .speed-table th, .speed-table td { padding: 0; box-shadow: none; text-align: left; }
+  .speed-table .time { text-align: left; }
+  .speed-table caption { display: block; }
+  .speed-table td::before { content: attr(data-label); display: block; color: var(--ink); font-weight: 600; }
+}
 @media (min-width: 640px) {
   section { padding: 72px 0 0; }
-  h1 { margin-top: 56px; }
+  h1 { margin-top: 48px; line-height: 72px; }
 }
 </style>
 </head>
@@ -219,6 +236,7 @@ footer {
   <p class="kicker">Typed decisions, answered by Haiku subagents</p>
   <h1>jill</h1>
   <p class="lead">jill answers small typed questions about a piece of text, using a <span class="nb">claude-haiku-5-5</span> subagent in place of TypeSafe’s Jev, a cloud decision model.</p>
+  <p class="small">Needs Node.js and an agent with an Agent tool.</p>
 
   <p class="label" id="install-label">In a terminal:</p>
   <div class="install install-cmd" role="group" aria-label="Install command">
@@ -231,7 +249,6 @@ footer {
     <code id="prompt">Use jill: which lane should this message go in, and does a person need to see it now?</code>
     <button class="copy" id="copy-prompt" type="button" aria-label="Copy the example prompt">Copy</button>
   </div>
-  <p class="small">Needs Node.js and an agent with an Agent tool.</p>
   <nav class="jump" aria-label="On this page">
     <a href="#how">How it works</a>
     <a href="#types">Three question types</a>
@@ -273,7 +290,7 @@ footer {
     <article>
       <h3>Choice</h3>
       <p>Pick one option.</p>
-      <pre tabindex="0" role="region" aria-label="Choice example JSON, scroll sideways">{
+      <pre role="region" aria-label="Choice example JSON">{
   "id": "lane",
   "type": "choice",
   "question": "Which lane?",
@@ -288,7 +305,7 @@ footer {
     <article>
       <h3>Score</h3>
       <p>Place the state (the text being judged) on a scale. The ends are the question’s own, for example 0 for not urgent and 1 for most urgent.</p>
-      <pre tabindex="0" role="region" aria-label="Score example JSON, scroll sideways">{
+      <pre role="region" aria-label="Score example JSON">{
   "id": "urgency",
   "type": "score",
   "question": "How urgent?",
@@ -298,7 +315,7 @@ footer {
     <article>
       <h3>Noul (yes or no)</h3>
       <p>Is a yes or no statement true of the state? Unlike choice and score, it has no options or scale.</p>
-      <pre tabindex="0" role="region" aria-label="Noul example JSON, scroll sideways">{
+      <pre role="region" aria-label="Noul example JSON">{
   "id": "refund",
   "type": "noul",
   "question": "Asks for a refund."
@@ -310,7 +327,7 @@ footer {
   <p class="answer"><strong>lane</strong>: billing, confidence 0.97</p>
   <p class="small">One answer, with the three fields the skill returns for each question: id, value and confidence. Every answer carries its own confidence from&nbsp;0&nbsp;to&nbsp;1. Below 0.6, the state did not settle the question, so ask it again on sonnet (see Merge) or route it to a person. This one is an example, not a measured result.</p>
   <h3 style="margin-top: 24px;">A failed answer</h3>
-  <pre class="err" tabindex="0" role="region" aria-label="Failed answer JSON, scroll sideways">{
+  <pre class="err" role="region" aria-label="Failed answer JSON">{
   "id": "lane",
   "value": null,
   "confidence": 0,
@@ -340,7 +357,7 @@ footer {
     <li><strong>Handoff worthiness</strong>: which turns record a decision or a constraint that a later session must keep.</li>
   </ul>
   <h3 style="margin-top: 24px;">Worked example: triage</h3>
-  <pre tabindex="0" role="region" aria-label="Triage worked example JSON, scroll sideways">[
+  <pre role="region" aria-label="Triage worked example JSON">[
   {
     "id": "kind",
     "type": "choice",
@@ -372,51 +389,46 @@ footer {
   <h2 id="speed">Speed</h2>
   <p>Measured on the Agent path, as the <a href="https://github.com/AnEntrypoint/jill#speed">project README</a> records them. Each figure is a single sample, with about one second of noise.</p>
   <figure class="speed-fig">
+    <p class="small chart-caveat">Caveat: single sample; noise with no stated side. Top row: low effort, two runs. Bottom bar: default effort, the same set.</p>
     <div class="speed-chart">
-      <span class="chart-txt" style="--x: 0; --y: 0">3.4 s: 8 questions, low effort (run 1)</span>
-      <span class="chart-txt" style="--x: 158; --y: 38">band: about 1 s noise</span>
-      <span class="chart-txt" style="--x: 0; --y: 53">4.1 s: 8 questions, low effort (run 2)</span>
-      <span class="chart-txt" style="--x: 0; --y: 106">8.9 s: the same set, default effort</span>
-      <svg class="speed-bars" viewBox="0 0 343 176" aria-hidden="true" focusable="false">
-        <rect class="bar" x="0" y="20" width="116.62" height="20"/>
-        <rect class="band" x="82.32" y="45" width="68.6" height="8"/>
-        <rect class="bar" x="0" y="73" width="140.63" height="20"/>
-        <rect class="band" x="106.33" y="98" width="68.6" height="8"/>
-        <rect class="bar" x="0" y="126" width="305.27" height="20"/>
-        <rect class="band" x="270.97" y="151" width="68.6" height="8"/>
-        <line class="axis" x1="0" y1="170" x2="343" y2="170"/>
-        <line class="axis" x1="0" y1="170" x2="0" y2="175"/>
-        <line class="axis" x1="68.6" y1="170" x2="68.6" y2="175"/>
-        <line class="axis" x1="137.2" y1="170" x2="137.2" y2="175"/>
-        <line class="axis" x1="205.8" y1="170" x2="205.8" y2="175"/>
-        <line class="axis" x1="274.4" y1="170" x2="274.4" y2="175"/>
-        <line class="axis" x1="343" y1="170" x2="343" y2="175"/>
+      <span class="chart-txt end" style="--x: 116.62; --y: 0">3.4 s</span>
+      <span class="chart-txt" style="--x: 139.63; --y: 0">4.1 s, second run</span>
+      <span class="chart-txt end" style="--x: 305.27; --y: 48">8.9 s</span>
+      <svg class="speed-bars" viewBox="0 0 343 144" aria-hidden="true" focusable="false">
+        <rect class="bar" x="0" y="24" width="116.62" height="24"/>
+        <rect class="span" x="116.62" y="35" width="24.01" height="2"/>
+        <rect class="tick" x="139.63" y="24" width="2" height="24"/>
+        <rect class="bar" x="0" y="72" width="305.27" height="24"/>
+        <line class="axis" x1="0" y1="120" x2="343" y2="120"/>
+        <line class="axis" x1="0" y1="120" x2="0" y2="125"/>
+        <line class="axis" x1="68.6" y1="120" x2="68.6" y2="125"/>
+        <line class="axis" x1="137.2" y1="120" x2="137.2" y2="125"/>
+        <line class="axis" x1="205.8" y1="120" x2="205.8" y2="125"/>
+        <line class="axis" x1="274.4" y1="120" x2="274.4" y2="125"/>
+        <line class="axis" x1="343" y1="120" x2="343" y2="125"/>
       </svg>
     </div>
     <div class="speed-ticks">
-      <span class="t-first" style="--x: 0">0</span>
-      <span style="--x: 68.6">2</span>
-      <span style="--x: 137.2">4</span>
-      <span style="--x: 205.8">6</span>
-      <span style="--x: 274.4">8</span>
+      <span class="t-first" style="--x: 0">0 s</span>
+      <span style="--x: 68.6">2 s</span>
+      <span style="--x: 137.2">4 s</span>
+      <span style="--x: 205.8">6 s</span>
+      <span style="--x: 274.4">8 s</span>
       <span class="t-last" style="--x: 343">10 s</span>
     </div>
-    <figcaption class="small">The one like-for-like pair in the README: the same 8-question set at low effort (two runs) and at default effort, with the same tokens. Each bar is one run. The band under each bar is the README’s about one second of noise, one second on either side of its value.</figcaption>
+    <figcaption class="small">The one like-for-like pair is the same 8-question set at low effort (two runs, each about 16.5k subagent tokens) and at default effort, with the same tokens. Each bar and tick is one run.</figcaption>
   </figure>
   <table class="speed-table">
-    <caption>Every timing the README records, one row per run; the speed-mode row is the README's range.</caption>
+    <caption>Other timings, one row per run; the chart above shows the three 8-question runs. The speed-mode row is the README’s range.</caption>
     <thead>
       <tr><th scope="col">Run</th><th scope="col" class="time">Time</th><th scope="col">Subagent tokens</th></tr>
     </thead>
     <tbody>
-      <tr><th scope="row">8 questions, <code>Explore</code>, low effort, run 1</th><td class="time">3.4&nbsp;s</td><td>about 16.5k</td></tr>
-      <tr><th scope="row">8 questions, <code>Explore</code>, low effort, run 2</th><td class="time">4.1&nbsp;s</td><td>about 16.5k</td></tr>
-      <tr><th scope="row">8 questions, the same set at default effort</th><td class="time">8.9&nbsp;s</td><td>the same as low effort</td></tr>
-      <tr><th scope="row">8 questions as two 4-question calls in parallel</th><td class="time">2.8&nbsp;s</td><td>twice the tokens</td></tr>
-      <tr><th scope="row">Two uncertain answers escalated to <code>sonnet</code>, low effort</th><td class="time">2.4&nbsp;s</td><td>not in README</td></tr>
-      <tr><th scope="row">Plan and Explore, which the README says cost the same (set size not stated)</th><td class="time">4.3&nbsp;s</td><td>16.7k</td></tr>
-      <tr><th scope="row">16 questions, speed mode (the default): parallel 8-question calls</th><td class="time">about 3.4 to 4.1&nbsp;s</td><td>about 33k</td></tr>
-      <tr><th scope="row">16 questions, token mode: one 16-question call</th><td class="time">6.5&nbsp;s</td><td>17.6k</td></tr>
+      <tr><th scope="row">8 questions as two 4-question calls in parallel</th><td class="time" data-label="Time">2.8&nbsp;s</td><td data-label="Subagent tokens">twice the tokens</td></tr>
+      <tr><th scope="row">Two uncertain answers escalated to <code>sonnet</code>, low effort</th><td class="time" data-label="Time">2.4&nbsp;s</td><td data-label="Subagent tokens">not in README</td></tr>
+      <tr><th scope="row">Plan and Explore, which the README says cost the same (set size not stated)</th><td class="time" data-label="Time">4.3&nbsp;s</td><td data-label="Subagent tokens">16.7k</td></tr>
+      <tr><th scope="row">16 questions, speed mode (the default): parallel 8-question calls</th><td class="time range" data-label="Time">about 3.4&nbsp;to&nbsp;4.1&nbsp;s</td><td data-label="Subagent tokens">about 33k</td></tr>
+      <tr><th scope="row">16 questions, token mode: one 16-question call</th><td class="time" data-label="Time">6.5&nbsp;s</td><td data-label="Subagent tokens">17.6k</td></tr>
     </tbody>
   </table>
   <p>The two-call gain (2.8&nbsp;s against 3.4&nbsp;s) is not firm.</p>
@@ -424,6 +436,13 @@ footer {
 </section>
 
 <footer>
+  <nav class="jump" aria-label="Sections, from the foot of the page">
+    <a href="#how">How it works</a>
+    <a href="#types">Three question types</a>
+    <a href="#policies">Fifteen ready-made question sets</a>
+    <a href="#speed">Speed</a>
+    <a href="#top">Back to top</a>
+  </nav>
   <p style="margin: 0;">Made by lanmower. Source: <a href="https://github.com/AnEntrypoint/jill">AnEntrypoint/jill</a>, MIT licence. Other install routes, including the Claude Code plugin: <a href="https://github.com/AnEntrypoint/jill#install">README Install</a>.</p>
 </footer>
 
@@ -454,15 +473,35 @@ footer {
           say(copiedMsg);
           setTimeout(reset, 1600);
         }, function () {
-          select('Copy failed. Selected: Ctrl+C or Cmd+C.');
+          select('Copy failed. Selected: use your copy action.');
         });
         return;
       }
-      select('Copy failed. Selected: Ctrl+C or Cmd+C.');
+      select('Copy failed. Selected: use your copy action.');
     });
   };
   wire(document.getElementById('copy'), document.getElementById('cmd'), 'Install command copied.');
   wire(document.getElementById('copy-prompt'), document.getElementById('prompt'), 'Example prompt copied.');
+
+  /* A JSON block is a keyboard stop only while it actually scrolls sideways (checked at load, on resize and on load of the fonts). */
+  var blocks = document.querySelectorAll('pre[role="region"]');
+  var checkBlocks = function () {
+    for (var i = 0; i < blocks.length; i++) {
+      var p = blocks[i];
+      if (!p.getAttribute('data-name')) p.setAttribute('data-name', p.getAttribute('aria-label'));
+      var name = p.getAttribute('data-name');
+      if (p.scrollWidth > p.clientWidth) {
+        p.setAttribute('tabindex', '0');
+        p.setAttribute('aria-label', name + ', scroll sideways');
+      } else {
+        p.removeAttribute('tabindex');
+        p.setAttribute('aria-label', name);
+      }
+    }
+  };
+  checkBlocks();
+  window.addEventListener('resize', checkBlocks);
+  window.addEventListener('load', checkBlocks);
 })();
 </script>
 </body>
