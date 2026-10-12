@@ -1,6 +1,6 @@
 ---
 name: jill
-description: Local replacement for TypeSafe's cloud Jev decision model. Answers typed questions (choice = pick one option, score = place content on a scale, noul = yes/no with calibrated confidence) about a piece of text or state. Runs inside the calling agent and dispatches a claude-haiku-5-5 subagent to answer, so no external API or shell step is involved. Use for model routing, skill selection, triage, mailbox lanes, memory-passage filtering, turn selection, PR risk, incident severity, personal-data checks, command gating, or any small structured decision where a fast typed answer beats prose.
+description: Local replacement for TypeSafe's cloud Jev decision model. Answers typed questions (choice = pick one option, score = place content on a scale, noul = yes/no with calibrated confidence) about a piece of text or state. Runs inside the calling agent and dispatches a claude-haiku-5-5 subagent to answer, so no external API or shell step is involved. Use for model routing, skill selection, triage, mailbox lanes, memory-passage filtering, turn selection, compaction disposition and boundary, PR risk, incident severity, personal-data checks, command gating, or any small structured decision where a fast typed answer beats prose.
 ---
 
 # jill
@@ -30,8 +30,10 @@ Held in this conversation:
 ```
 
 Ready-made question sets are in `references/policies.md`: model routing, skill selection,
-triage, mailbox lanes, memory filtering, turn selection, injection screening, command gating,
-pull-request risk, incident severity, and personal-data checks. Each policy is data. None of
+triage, mailbox lanes, memory filtering, turn selection, compaction disposition, compaction
+boundary, injection screening, command gating, pull-request risk, incident severity,
+personal-data checks, search-result selection, evidence sufficiency, next browser action and
+handoff worthiness. Each policy is data. None of
 them contains logic.
 
 ## Output
@@ -82,6 +84,9 @@ Do these steps yourself, in this conversation. Do not run a shell command for th
   the reply is one short code line per item, and several question sets can share one stream.
   After every merge, check that the returned ids match the requested ids, and re-dispatch
   any missing ones.
+- **Compaction.** Cutting a context is a decision, not a rule: `references/compaction.md` has the
+  strategy for Claude Code, and the two `compaction` policies carry the keep / compress / evict
+  and boundary decisions. A block whose answers are unknown is kept.
 - **Policies as data.** Each policy in `references/policies.md` is a question set. Build new
   ones the same way. The caller maps answers to actions in its own notes, not in this skill.
 - **Repeat decisions.** A repeated identical state and question reuses the earlier answer from

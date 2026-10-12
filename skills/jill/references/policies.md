@@ -66,6 +66,31 @@ Send one passage per batch, or the whole passage list as the state with one noul
 ]
 ```
 
+## Compaction disposition (keep, compress or evict one block when the context is cut)
+
+Put one block per state, or every block one per line with the dense protocol.
+
+```json
+[
+  {"id": "disposition", "type": "choice", "question": "What to do with this block when the context is cut?", "options": ["keep", "compress", "evict"]},
+  {"id": "needle", "type": "noul", "question": "This block holds an identifier, path, number or commitment the rest of the task depends on."},
+  {"id": "recoverable", "type": "noul", "question": "This block can be recovered from a file, git or one tool call if it is dropped."},
+  {"id": "salience", "type": "score", "question": "How much later work depends on this block.", "scale": [0, 1]}
+]
+```
+
+## Compaction boundary (is this the moment to cut the context)
+
+Put the recent actions and the current plan in the state, one per line.
+
+```json
+[
+  {"id": "subtask_done", "type": "noul", "question": "The last action completed a subtask and its material is no longer needed."},
+  {"id": "in_flight", "type": "noul", "question": "There is unfinished reasoning in flight that a cut would break."},
+  {"id": "when", "type": "choice", "question": "When to cut?", "options": ["now", "next_boundary", "not_this_turn"]}
+]
+```
+
 ## Injection screen (web or tool output that tries to steer the agent)
 
 ```json

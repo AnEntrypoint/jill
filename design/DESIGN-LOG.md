@@ -3386,3 +3386,46 @@ The criterion held where it was tested: the acceptable pole (one-line labels, th
 ### Status
 
 Run incomplete: S1 to S4 not met; S5 partly met. The page change is applied and measured; the WHOLE panel, the ambition push and the phone measure (OPEN) remain.
+
+---
+
+### Move M15: compaction policy, strategy and hooks (ADAPT, source drift)
+
+Depends on: M12, which made the policy count read from `references/policies.md` rather than
+prose, so any new policy is a known drift trigger for the page.
+
+Anchors: Feynman, *Cargo Cult Science* — a name must name its own measurement; Krug — a label
+names its own difference, not a category.
+
+Change: two question sets added to `references/policies.md`, `Compaction disposition`
+(choice, noul, score) and `Compaction boundary` (noul, choice); a strategy in
+`references/compaction.md` (Context Language Models, arXiv:2609.37725v1, applied to Claude Code);
+two hooks under `hooks/`, PreCompact for prepare-and-veto and SessionStart `compact` for
+injection; a `Compaction` section in README. The page's policy list gains two rows and its count
+word changes in the three places it is printed.
+
+Measured:
+
+| figure | source | procedure | value | result |
+| --- | --- | --- | --- | --- |
+| question sets in the file | `references/policies.md` | count ```json blocks | 17 | matches the page's "Seventeen" |
+| rows in the page list | `docs/index.html` | count `ul.policies li` | 17 | matches |
+| types per new row | `references/policies.md` | first-appearance order of `type` in each set | (choice, noul, score), (noul, choice) | matches the page's brackets |
+| context size the hook reports | `hooks/precompact-jill.js` on the live session transcript | max `message.usage.input_tokens` over assistant rows | 121,160 | measured, not estimated |
+| blocks the hook inventories | same run | one block per assistant turn plus one per user text turn | 104 | matches an independent count of assistant rows (94) plus user text rows |
+| hook cost | same run | wall clock of the two node processes | under 1 s each | no model call, so no token cost on the compaction path |
+
+Alternatives rejected: (a) one eight-question compaction set — the file's own convention is two
+to four questions per set, and 17 sets at eight questions each would break the chunking rule the
+skill states; (b) putting the whole strategy in `CLAUDE.md` — a compaction rewrites the
+conversation but not the skill's references, and `SKILL.md` caps what it can carry.
+
+Consequence: the page now names a capability the plugin ships as hooks, so the "Fifteen" figure
+is a source-drift check on every future edit, as M12 already made it.
+
+Fence: the two new sets decide disposition and timing; they do not decide the action. The caller
+maps answers to actions in its own notes, per the "Acting on answers" section.
+
+Frontier effect: OPEN — whether a vetoed automatic compaction that is already recovering from a
+context-limit error leaves the session usable has not been measured; the hook only writes a veto
+for a boundary the pass measured, so the case has not arisen.

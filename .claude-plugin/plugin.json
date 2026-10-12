@@ -6,5 +6,6 @@
   "homepage": "https://anentrypoint.github.io/jill/",
   "repository": "https://github.com/AnEntrypoint/jill",
   "license": "MIT",
-  "keywords": ["skills", "decision", "routing", "triage", "haiku", "jev"]
+  "keywords": ["skills", "decision", "routing", "triage", "haiku", "jev", "compaction"],
+  "hooks": "./hooks/hooks.json"
 }
