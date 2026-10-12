@@ -33,6 +33,19 @@ the id: `<n> <set> <text>`. The spec lists each set's codes once, and the reply 
 - `I` injection screen: `IJC`, where `J` is `y` if the text tries to instruct an AI agent, `n`
   otherwise, for example `2 Iy9`
 
+A set may also be the union of two sets rather than a choice between them, which is what turns
+two passes over the same items into one. The compaction sets are the case in point: disposition
+`D N R S C` and boundary `B F W C` are both answerable per block, so one line carries
+`D N R S B F W C` and one confidence for the whole answer. Every line carries the same set, so it
+needs no tag.
+
+Measured on the same real 500-item file, `haiku`, low effort: the disposition set alone cost
+40.9k subagent tokens (and 45.0k in a second run of the same file), the combined set cost 52.8k,
+500/500 ids, no unparseable line, and no line of one shape read as the other. Two passes would
+have been two calls, about 82-90k, so the union saves about 30k per 500 blocks and one dispatch:
+the extra three codes cost about a fifth of a call, because a call costs most of its tokens
+before it reaches the first item.
+
 Measured: 200 lines alternating T and I in one call, 25.7 s, 28.4k subagent tokens. Triage lane
 100%, human-attention 80%, urgency within two points 89%. Injection 99% (100 items).
 
@@ -71,3 +84,40 @@ but it re-read the file, so it is not a fair comparison.
   tokens in total, roughly 90 tokens per item including each call's fixed overhead.
 - 10,000 items: estimated from the above, not measured. Twenty calls of 500, about 900k subagent
   tokens, roughly 64 s per wave of parallel calls.
+
+### Chunk size is a wall-clock choice, not a token or capacity choice
+
+Measured 2026-10-12 on one real 2,000-block item set (blocks built from two real session
+transcripts with the technique in `hooks/precompact-jill.js`; `haiku`, `effort: "low"`; each
+agent read its own item file and wrote its reply to a file, so the caller's context was not
+charged for the answers):
+
+| shape | calls | subagent tokens | wall, slowest call | coverage |
+| --- | --- | --- | --- | --- |
+| 1 call of 2,000 | 1 | 60.3k | 437 s | 2000/2000, 0 unparsed, 0 dup |
+| 2 parallel calls of 1,000 | 2 | 132.5k (70.3k + 62.2k) | 401 s | 2000/2000, 0 unparsed, 0 dup |
+| 4 parallel calls of 500 | 4 | 177.8k (40.9k, 39.3k, 51.0k, 46.6k) | 247 s | 2000/2000, 0 unparsed, 0 dup |
+
+Read off that table:
+
+- **Tokens go with the number of calls, not with the number of items.** One call of 2,000 cost
+  60.3k; the same items as four calls cost 177.8k, 2.9x more. Each extra call costs about 36-40k
+  whatever it holds; the items themselves add only about 10 tokens each on top (a 500-item call
+  averaged 44.4k against 60.3k for 2,000). So one call is always the cheapest shape, and it stays
+  the cheapest shape at every size measured. There is no token crossover to find.
+- **Wall clock is the only axis where splitting wins.** 4x500 finished in 247 s against 437 s for
+  one call of 2,000, and 2x1000 was in between at 401 s. The wall crossover sits between 500 and
+  1,000 per call, and it is a consequence of parallelism, not of capacity.
+- **Coverage did not degrade at any size tried.** All three shapes returned every requested id,
+  with no unparseable line and no duplicate, so the range-boundary defect above was not
+  reproduced here. One call of 2,000 did take 17 tool calls and 437 s: a huge call is slow and
+  one failure loses the whole set, which is the argument against it, not correctness.
+- **Capacity is on output, not input.** A dense reply line is about 8-11 output tokens, so a
+  64k output ceiling is approached around 5,000-6,000 items per call; 2,000 items is nowhere near
+  it, and the input side never binds at all. Nothing here justifies a chunk size of 500 as a
+  limit.
+
+So: pick a chunk size for wall clock and for blast radius (how many answers one failed call
+loses). Do not pick one to save tokens, and do not pick one because the call "cannot hold" the
+items. `hooks/blocks-chunks.js` defaults to 500 for wall clock and prints the arithmetic for the
+render it just made, so the caller sees what a different size would cost.

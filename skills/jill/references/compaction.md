@@ -179,11 +179,19 @@ relocating up to `K` surviving spans, re-rotating RoPE, splicing after the edit.
 client-side counterpart is behavioural: keep the edit tail-stable. Append the directive, never
 rewrite earlier context, so the prefix the server already cached still matches.
 
+**Stepwise GRPO with the success-gated efficiency advantage** (CLM §4) is training-side: it
+assigns credit per step inside a rollout and gates the efficiency advantage on whether the
+rollout succeeded at all, so it only exists while a policy is being updated from rollouts. A
+Claude Code client runs no rollouts and updates no weights, so there is nothing to port. The
+client-side counterpart is the reward, recorded rather than optimized: needles retained per
+token spent, per compaction, which is what the Evolution section scores candidates on.
+
 ## Evolution
 
 CLM optimizes the steering doc itself: rollouts on a training split, a proposer model
 generating candidate skills from traces, candidates evaluated on dev, best selected, one held-out
-evaluation. Held-out gain reached 35.9 points on their KV Store task. The same loop applies
+evaluation. Held-out gain reached 35.9 points on ContextBench (the abstract reports the same figure for its context-management
+task; §5.2 gives it "at lower compute"), not on a KV Store task. The same loop applies
 here — the candidate is the steering sentence set, the trace is `(directive, blocks kept,
 needles lost, tokens after)`, and the reward is needles retained per token spent. Recorded as a
 procedure, not as a scheduler: nothing runs it until a caller asks.

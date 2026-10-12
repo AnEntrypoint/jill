@@ -74,7 +74,12 @@ does that by dispatching jill deciders.
   boundary answers: the file the `PreCompact` veto reads, so the pass has a producer and the caller
   never hand-crafts it. `when=now` removes the file, so a stale decision cannot block a compaction.
 - `hooks/blocks-chunks.js` — renders the inventory as dense-protocol chunk files, one item per
-  line, with a spec file per chunk.
+  line, with a spec file per chunk. Three sets: `disposition`, `boundary`, and `both`, which
+  answers both on one line so the decision pass is one call instead of two. Chunk size (default
+  500) is a wall-clock and blast-radius choice, not a token or capacity one: measured on 2,000
+  real blocks, one call cost 60.3k subagent tokens and 437 s, four parallel calls of 500 cost
+  177.8k and 247 s, so splitting never saves tokens. A re-render replaces the rendered files and
+  keeps every `*.reply.txt`: answers already paid for are never clobbered.
 - `hooks/blocks-merge.js` — merges the replies, checks that every id came back, and applies the
   overrides: a needle is kept, an answer below 0.6 confidence is kept, and an eviction is refused
   unless the block is recoverable.
@@ -98,6 +103,10 @@ Measured on the Agent path, single samples with about one second of noise:
   call took 24 s and 27.6k tokens, against 31 s and 30.2k for a verbose line format. 2,000 items
   in four parallel calls of 500 took about 64 s and about 180k tokens in total. Ids are checked
   after each merge: two ids went missing at range boundaries in that run.
+- Chunk size, re-measured on one real 2,000-block set: 1 call of 2,000 = 60.3k tokens and 437 s;
+  2 parallel calls of 1,000 = 132.5k and 401 s; 4 parallel calls of 500 = 177.8k and 247 s. Every
+  shape returned all 2,000 ids with no unparseable line and no duplicate. One call is always the
+  cheapest shape; splitting buys wall clock and a smaller blast radius, never tokens.
 - Mixed question sets in one stream (triage and injection screening alternating): lane 100%,
   injection 99% on 100 items each.
 - Two frontiers. Speed mode, the default: parallel 8-question calls, about 3.4 to 4.1 s and about
