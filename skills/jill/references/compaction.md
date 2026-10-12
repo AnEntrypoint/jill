@@ -73,7 +73,8 @@ Two policies in `references/policies.md` carry the decisions:
    boundary question is asked; otherwise the pass stops here.
 2. **Ask the boundary set first.** `in_flight=yes` beats every other answer: a cut that breaks
    unfinished reasoning is worse than an oversized context. `when=next_boundary` defers the cut
-   and records where the boundary is.
+   and records where the boundary is. `hooks/boundary-write.js <session_id> <when> <confidence>
+   [boundary] [in_flight]` writes the answer; `when=now` clears it.
 3. **Chunk the transcript into blocks.** One block per assistant turn plus its tool results, or
    one per subtask when the transcript is large. Give every block a stable id.
 4. **Ask the disposition set per block.** `hooks/blocks-chunks.js` renders the inventory as
@@ -107,7 +108,7 @@ big its own context is.
 ## The veto
 
 CLM's boundary result is that *when* the cut happens matters as much as what survives it. jill
-answers the boundary set and the caller writes the result:
+answers the boundary set and `hooks/boundary-write.js` writes the result:
 
 ```
 ~/.claude/context/decision-<session_id>.json

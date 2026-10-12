@@ -67,9 +67,12 @@ fixed rule. Two hooks carry it.
   context file and the needle manifest. This is the injection point: PreCompact cannot add
   anything to a compaction, and SessionStart with the `compact` matcher can.
 
-Two scripts carry the decision pass itself. Neither answers a question; the calling agent does
-that by dispatching jill deciders.
+Three scripts carry the decision pass itself. None of them answers a question; the calling agent
+does that by dispatching jill deciders.
 
+- `hooks/boundary-write.js` — writes `~/.claude/context/decision-<session_id>.json` from the
+  boundary answers: the file the `PreCompact` veto reads, so the pass has a producer and the caller
+  never hand-crafts it. `when=now` removes the file, so a stale decision cannot block a compaction.
 - `hooks/blocks-chunks.js` — renders the inventory as dense-protocol chunk files, one item per
   line, with a spec file per chunk.
 - `hooks/blocks-merge.js` — merges the replies, checks that every id came back, and applies the
